@@ -1,0 +1,244 @@
+﻿
+<!DOCTYPE html>
+<head>
+    <title>Report Output Page</title>
+    <style>
+        .topnav a {
+            float: left;
+            color: #000;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body, input, select {
+            padding: 0;
+            margin: 0;
+            outline: none;
+            font-family: Roboto, Arial, sans-serif;
+            font-size: 16px;
+            color: #000;
+        }
+
+        h1, h3 {
+            font-weight: 400;
+        }
+
+        h1 {
+            font-size: 32px;
+        }
+
+        h3 {
+            color: #B22222;
+        }
+
+        .main-block, .info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-block {
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 100%;
+            background-size: cover;
+        }
+
+        form {
+            width: 80%;
+            padding: 25px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0);
+        }
+
+        input, select {
+            padding: 5px;
+            margin-bottom: 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #eee;
+        }
+
+            input::placeholder {
+                color: #000;
+            }
+
+        option {
+            background: white;
+            border: none;
+        }
+
+        .metod {
+            display: flex;
+        }
+
+        input[type=radio] {
+            display: none;
+        }
+
+        label.radio {
+            position: relative;
+            display: inline-block;
+            margin-right: 20px;
+            text-indent: 32px;
+            cursor: pointer;
+        }
+
+            label.radio:before {
+                content: "";
+                position: absolute;
+                top: -1px;
+                left: 0;
+                width: 17px;
+                height: 17px;
+                border-radius: 50%;
+                border: 2px solid #1c87c9;
+            }
+
+            label.radio:after {
+                content: "";
+                position: absolute;
+                width: 8px;
+                height: 4px;
+                top: 5px;
+                left: 5px;
+                border-bottom: 3px solid #1c87c9;
+                border-left: 3px solid #1c87c9;
+                transform: rotate(-45deg);
+                opacity: 0;
+            }
+
+        input[type=radio]:checked + label:after {
+            opacity: 1;
+        }
+
+        button {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            margin: 20px auto 0;
+            border: none;
+            border-radius: 5px;
+            background: #B22222;
+            font-size: 14px;
+            font-weight: 600;
+            color: #eee;
+        }
+
+            button:hover {
+                background: #095484;
+            }
+
+        @media (min-width: 568px) {
+            .info {
+                flex-flow: row wrap;
+                justify-content: space-between;
+            }
+
+            input {
+                width: 46%;
+            }
+
+                input.fname {
+                    width: 100%;
+                }
+
+            select {
+                width: 48%;
+            }
+        }
+
+        .content-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            min-width: 400px;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .content-table thead tr {
+            background-color: #B22222;
+            color: white;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .content-table th,
+        .content-table td {
+            padding: 12px 15px;
+        }
+
+        .content-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .content-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .content-table tbody tr:last-of-type {
+            border-bottom: 2px solid #B22222;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main-block">
+        <h1>Requested Report for {{report}}:</h1>
+        <div class="topnav">
+            <a class="active " href="{{ url_for('views.index') }}">
+                Home
+            </a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('auth.logout') }}">
+                Logout
+            </a>
+            {% endif %}
+            {% if not current_user.is_authenticated %}
+            <a href="/emp_login" class="w3-bar-item w3-button">Employee Login</a>
+            {% endif %}
+        </div>
+
+        <!-- needs: report_type, date_start, date_end, num_items , profit(if deliveries),
+                header, data (2d array) -->
+
+        <br><br>
+        {{ report }} in {{ date_start }} to {{ date_end }}: {{ num_items }}
+
+        {% if report == "Total Deliveries" %}
+        <br>
+        Total Profit: {{ profit }}
+        {% endif %}
+
+        <br><br>
+
+        <table class="content-table">
+            <thead>
+                <tr>
+                    <!-- In your python return statement use variable heading for the column Titles -->
+                    {% for header in heading %}
+                    <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <!-- In your python return statement use variable data for the data list that you want to return -->
+            <!-- data should be a 2D array -->
+            {% for row in data %}
+            <tr>
+                {% for cell in row %}
+                <td>{{cell}}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

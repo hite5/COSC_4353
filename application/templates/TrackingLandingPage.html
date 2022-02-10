@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> UH Post Office - Tracking Details </title>
+
+
+
+
+    <style>
+        Body {
+            font-family: Roboto, Arial, sans-serif;
+        }
+
+        form {
+            border: 3px solid #B22222;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        /* Create two equal columns that sits next to each other */
+        .column {
+            flex: 50%;
+            padding: 10px;
+            text-align: center;
+        }
+        /* Add a black background color to the top navigation */
+.topnav {
+    background-color: #FFFFFF;
+    overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  color: #000000;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #B22222;
+  color: white;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Right-aligned section inside the top navigation */
+.topnav-right {
+  float: right;
+}
+    </style>
+
+</head>
+<body>
+<div class="topnav">
+  <a href="/">Home </a>
+  <a href="/packageTracker"> Track Another Package </a>
+  <div class="topnav-right">
+    <a href="#about">About</a>
+  </div>
+</div>
+    <h2><u>Tracking Details</u></h2>
+    <h3>Package Number: {{packID}}</h3>
+
+    <div class="row">
+        <div class="column">
+            <form>
+                <h2>Shipping Progress</h2>
+                <h3>Status: <label>{{trackpack.status.capitalize()}}</label></h3>
+                <p>
+                    {% for each in history %}
+                    <p>
+                    {{each}}
+                    </p>
+                    {% endfor %}
+                </p>
+
+            </form>
+        </div>
+        <div class="column">
+            <form>
+                <h2>Shipment Details </h2>
+                <label><b>Name: </b></label> <br />
+                <label>{{customer.Name}}</label>
+                <br /><br />
+                <label><b>Email: </b></label> <br />
+                <label>{{customer.email}}</label>
+                <br /><br />
+                <label><b>Phone number: </b></label> <br />
+                <label>{{customer.phone_no}}</label>
+                <br /><br />
+                <label><b>Destination address: </b></label> <br />
+                <label>{{customer.address}}</label>
+                <br /><br />
+                <label><b>Weight: </b></label> <br />
+                <label>{{trackpack.weight}} </label>
+                <br /><br />
+                <label><b>Dimensions: </b></label> <br />
+                <label>{{trackpack.length}}" L X {{trackpack.width}}" W X {{trackpack.height}}" H</label>
+                <br /><br />
+                <label><b>Delivery Method & Options: </b></label> <br />
+                <label>
+                    Priority: {{trackpack.priority}}
+                    <br/>
+                    Insurance: {{trackpack.ins}}
+                    <br/>
+                    Fragile: {{trackpack.isFragile}}
+                </label>
+                <br /><br />
+                <label><b>Price: </b></label> <br />
+                <label>${{trackpack.price}} </label>
+                <br /><br />
+            </form>
+        </div>
+    </div>
+</body>
+</html>
