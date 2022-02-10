@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Employee Details</title>
+    <title>Profile Management</title>
     <style>
         .topnav a {
             float: left;
@@ -127,7 +127,7 @@
         </div>
         {% endif %}
         {% endwith %}
-        <h1>Edit Employee Profile</h1>
+        <h1>Edit User Profile</h1>
         <div class="topnav">
             <a class = "active "href="{{ url_for('views.index') }}">
                 Home
@@ -140,7 +140,7 @@
             </a>
         </div>
 		<form action="" method="POST">
-            <h3>Employee Information</h3>
+            <h3>Customer Information</h3>
             <div class="info">
                 <div>
                     <input class="fname" type="text" name="fname" placeholder="First name" maxlength="15"

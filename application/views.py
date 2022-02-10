@@ -206,70 +206,49 @@ def tracking():
         print(e)
 
 
-@views.route('/NewEmployeeForm', methods=["GET", "POST"])
-@login_required_test(role="supervisor")
-def newEmployee():
+@views.route('/NewCustomerForm', methods=["GET", "POST"])
+def NewCustomerForm():
     if request.method == "POST":
         fname = request.form.get("fname")
         lname = request.form.get("lname")
         passW = request.form.get("passW")
         email = request.form.get("email")
         phoneNum = request.form.get("phoneNum")
-        branchID = request.form.get("office")
-        employeeType = request.form.get("employeeType")
-        # temp = ""
+        cust_address = request.form.get("cust_address")
 
+        #if user already exists, redirect back to signup form
         user1 = User.query.filter_by(email=email).first()
-        if user1:  # if a user is found, we want to redirect back to signup page so user can try again
+        if user1:
             flash('Email address already exists')
-            return redirect(url_for('views.newEmployee'))
+            return redirect(url_for('views.NewCustomerForm'))
 
-        # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-        new_user = User(email=email, name=fname, type=employeeType,
-                        password=generate_password_hash(passW, method='sha256'))
-        # add the new user to the database
-        # db.session.add(new_user)
-        # db.session.commit()
-
-        if branchID is None:
-            flash('Select a Branch')
-            return redirect(url_for('views.newEmployee'))
-        elif employeeType is None:
-            flash('Select an Employee role')
-            return redirect(url_for('views.newEmployee'))
+        new_user = User(email = email, name = fname,
+                        password = generate_password_hash(passW, method='sha256'))
 
         try:
             with connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=database
+                host = host,
+                user = user,
+                password = password,
+                database = database
             ) as connection:
                 print(connection)
 
-                insert_employee = "INSERT INTO employee (F_name, L_name, Ph_num, email, Emp_pwd, " \
-                                  "Employee_type, office_num, date_hired) " \
-                                  "VALUES " \
-                                  "('" + fname + "','" + lname + "','" + phoneNum + "','" + email + \
-                                  "','" + passW + "','" + employeeType + "'," + branchID + ", NOW());"
-
-                query = "SELECT Emp_ID FROM employee WHERE F_Name = '" + fname + "'  AND L_Name = '" + lname + "' AND " \
-                                                                                                               "Ph_num = '" + phoneNum + "' AND Employee_type = '" + employeeType + "' " \
-                                                                                                                                                                                    "AND office_num = " + branchID + " OR email = '" + email + "' ;"
+                # ADD SEQUEL SHIT
+                insert_customer = "" #do dis
 
                 with connection.cursor(buffered=True) as cursor:
-                    # cursor.execute(insert_employee)
-                    # connection.commit()
+                    #cursor.execute(insert_customer)
+                    #connection.commit()
                     cursor.execute(query)
                     temp = cursor.fetchone()
-                    print("successfully inputted data into the database")
+                    print("Successfully inputted data into DB")
 
                     if temp is not None:
-                        flash('Email address already exists')
-                        return redirect(url_for('views.newEmployee'))
-
+                        flash('Email already exists')
+                        return redirect(url_for('views.NewCustomerForm'))
                     else:
-                        cursor.execute(insert_employee)
+                        cursor.execute(insert_customer)
                         connection.commit()
                         cursor.execute(query)
                         temp = cursor.fetchone()
@@ -277,31 +256,17 @@ def newEmployee():
                         db.session.add(new_user)
                         db.session.commit()
 
-                        empInfo = {
+                        custInfo = {
                             "fname": fname,
                             "lname": lname,
                             "email": email,
                             "phoneNum": phoneNum,
-                            "empType": employeeType,
-                            "bid": branchID,
-                            "empID": temp[0]
+                            "cust_address": cust_address
                         }
-                        return render_template("EmpConfirmation.html", info=empInfo)
+                        return render_template("CustomerConfirmation.html", info=custInfo)
         except Error as e:
             print(e)
-
-        # empInfo = {
-        #     "fname": fname,
-        #     "lname": lname,
-        #     "email": email,
-        #     "phoneNum": phoneNum,
-        #     "empType": employeeType,
-        #     "bid": branchID,
-        #     "empID": temp[0]
-        # }
-
-        # return render_template("EmpConfirmation.html", info = empInfo)
-    return render_template("NewEmployeeForm.html")
+    return render_template("NewCustomerForm.html")
 
 
 @views.route('/EditEmployee', methods=["GET", "POST"])
@@ -364,10 +329,11 @@ def editEmployee():
                 return redirect(url_for('views.editEmployee'))
 
             else:  # GET
-                return render_template("EditEmployee.html", data=data)
+                return render_template("EditProfile.html", data=data)
 
     except Error as e:
         print(e)
+        return render_template("EditProfile.html", data=0)
 
 
 @views.route('/NewPackage', methods=["GET", "POST"])

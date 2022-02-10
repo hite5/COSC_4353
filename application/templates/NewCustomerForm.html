@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>New Employee</title>
+    <title>New Customer</title>
     <style>
         html, body {
             height: 100%;
@@ -157,7 +157,7 @@
 </head>
 <body>
     <div class="main-block">
-        <h1>New Employee Registration</h1>
+        <h1>New Customer Registration</h1>
         <div class="topnav">
             <a class="active " href="{{ url_for('views.index') }}">
                 Home
@@ -173,30 +173,12 @@
                 </div>
             {% endif %}
         {% endwith %}
-        <form action="{{ url_for("views.newEmployee")}}" method="post">
-            <h3>Employee Information</h3>
+        <form action="{{ url_for("views.NewCustomerForm")}}" method="post">
+            <h3>Log In Information</h3>
             <div class="info">
-                <input class="fname" type="text" name="fname" placeholder="First name" maxlength="15" required />
-                <input class="lname" type="text" name="lname" placeholder="Last name" maxlength="15" required />
+                <input type="text" name="email" placeholder="Email" maxlength="30" required />
                 <input type="password" name="passW" placeholder="Temporary Password" maxlength="15" required />
 
-                <input type="text" name="email" placeholder="Email" maxlength="30" required />
-                <input type="text" name="phoneNum" placeholder="Phone number" maxlength="10" required />
-
-                <select name="employeeType" required>
-                    <option value="string" disabled selected>Employee Type</option>
-                    <option value="employee">Employee</option>
-                    <option value="supervisor">Supervisor</option>
-                </select>
-                <!--<input type="text" name="office" placeholder="Branch ID" maxlength="10" required /> -->
-                <select name="office" required>
-                    <option value="text" disabled selected>Branch ID</option>
-                    <option value="1">Houston</option>
-                    <option value="2">Dallas</option>
-                    <option value="3">Austin</option>
-                    <option value="4">San Antonio</option>
-                    <option value="5">El Paso</option>
-                </select>
             </div>
             <button href="/" class="button">Submit</button>
         </form>
