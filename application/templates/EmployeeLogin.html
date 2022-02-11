@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> UH Post Office - Login Page </title>
+    <title> UH Fuel Depot - Login Page </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
-    <link rel="stylesheet" href="/static/sidebar.css"/>
+<!--    <link rel="stylesheet" href="/static/sidebar.css"/>-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -58,44 +58,47 @@
     </style>
 </head>
 <body>
-<!-- Sidebar/menu -->
-  <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
-    <div class="w3-container w3-display-container w3-padding-16">
-      <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
-      <h3 class="w3-wide"><b>UH Post Office</b></h3>
-    </div>
-    <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
-      <a href="{{ url_for('views.index') }}" class="w3-bar-item w3-button">Home</a>
-      {% if current_user.is_authenticated %} <!-- Employees and Supervisors -->
-      <a href="{{ url_for('auth.logout') }}" class="w3-bar-item w3-button">Logout</a>
-      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
-        Packages <i class="fa fa-caret-down"></i>
-      </a>
-      <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
-        <a href="/NewPackage" class="w3-bar-item w3-button">New Package</a>
-        <a href="/packageTracker" class="w3-bar-item w3-button">Track Package</a>
-        <a href="{{ url_for('views.packageUpdateForm') }}" class="w3-bar-item w3-button">Manage Package</a>
-        <a href="/packageSearch" class="w3-bar-item w3-button">Search Package</a>
-      </div>
-      <a href="/customerSearch" class="w3-bar-item w3-button">Search Customer</a>
-      <a href="/editCustomerSearch" class="w3-bar-item w3-button">Edit Customer</a>
-      <a href="/EditEmployee" class="w3-bar-item w3-button">Edit Account</a>
-      <a href="/report" class="w3-bar-item w3-button">Reports</a>
+<!--&lt;!&ndash; Sidebar/menu &ndash;&gt;-->
+<!--  <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">-->
+<!--    <div class="w3-container w3-display-container w3-padding-16">-->
+<!--      <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>-->
+<!--      <h3 class="w3-wide"><b>UH Fuel Depot</b></h3>-->
+<!--    </div>-->
+<!--    <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">-->
+<!--      <a href="{{ url_for('views.index') }}" class="w3-bar-item w3-button">Home</a>-->
+<!--      {% if current_user.is_authenticated %} &lt;!&ndash; Employees and Supervisors &ndash;&gt;-->
+<!--      <a href="{{ url_for('auth.logout') }}" class="w3-bar-item w3-button">Logout</a>-->
+<!--      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">-->
+<!--        Packages <i class="fa fa-caret-down"></i>-->
+<!--      </a>-->
+<!--      <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">-->
+<!--        <a href="/NewPackage" class="w3-bar-item w3-button">New Package</a>-->
+<!--        <a href="/packageTracker" class="w3-bar-item w3-button">Track Package</a>-->
+<!--        <a href="{{ url_for('views.packageUpdateForm') }}" class="w3-bar-item w3-button">Manage Package</a>-->
+<!--        <a href="/packageSearch" class="w3-bar-item w3-button">Search Package</a>-->
+<!--      </div>-->
+<!--      <a href="/customerSearch" class="w3-bar-item w3-button">Search Customer</a>-->
+<!--      <a href="/editCustomerSearch" class="w3-bar-item w3-button">Edit Customer</a>-->
+<!--      <a href="/EditEmployee" class="w3-bar-item w3-button">Edit Account</a>-->
+<!--      <a href="/report" class="w3-bar-item w3-button">Reports</a>-->
 
-      {% endif %}
-      {% if current_user.type == 'supervisor' %} <!-- Supervisors Only -->
-      <a href="/NewEmployeeForm" class="w3-bar-item w3-button">Add New Employee</a>
-      <a href="/employeeSearch" class="w3-bar-item w3-button">Search Employee</a>
-      {% endif %}
-      {% if not current_user.is_authenticated %} <!-- Not Logged In -->
-      <a href="/emp_login" class="w3-bar-item w3-button">Employee Login</a>
-      <a href="/packageTracker" class="w3-bar-item w3-button">Track Package</a>
-      {% endif %}
+<!--      {% endif %}-->
+<!--      {% if current_user.type == 'supervisor' %} &lt;!&ndash; Supervisors Only &ndash;&gt;-->
+<!--      <a href="/NewEmployeeForm" class="w3-bar-item w3-button">Add New Employee</a>-->
+<!--      <a href="/employeeSearch" class="w3-bar-item w3-button">Search Employee</a>-->
+<!--      {% endif %}-->
+<!--      {% if not current_user.is_authenticated %} &lt;!&ndash; Not Logged In &ndash;&gt;-->
+<!--      <a href="/emp_login" class="w3-bar-item w3-button">Customer Login</a>-->
+<!--      <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>-->
+<!--      {% endif %}-->
 
 
 </nav>
-    <div class="w3-main" style="margin-left:250px">
-    <center> <h1> Employee Login </h1> </center>
+    <div class="w3-main" style="margin-left:500px">
+
+    <div class="w3-main" style="margin-right:500px">
+
+    <center> <h1> Customer Login </h1> </center>
     <div>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -115,7 +118,7 @@
                 <a class="active " href="{{ url_for('views.index') }}">
                     Home
                 </a>
-                <a href="/packageTracker" class="w3-bar-item w3-button">Track Package</a>
+                <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
             </div>
         </form>
     </div>
