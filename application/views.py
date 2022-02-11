@@ -545,7 +545,7 @@ def packDelivery():
 
         return render_template("ConfirmationPage.html", info=orderInfo)
 
-    return render_template("shippingForm.html")
+    return render_template("fuelQuoteForm.html")
 
 
 @views.route('/Submitted', methods=["GET", "POST"])
