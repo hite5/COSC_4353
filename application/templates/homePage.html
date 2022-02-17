@@ -42,7 +42,7 @@
       {% if current_user.is_authenticated %} <!-- Employees and Supervisors -->
       <a href="{{ url_for('auth.logout') }}" class="w3-bar-item w3-button">Logout</a>
       <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
-        Packages <i class="fa fa-caret-down"></i>
+        Orders <i class="fa fa-caret-down"></i>
       </a>
       <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
         <a href="/NewPackage" class="w3-bar-item w3-button">New Order</a>
