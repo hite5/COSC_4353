@@ -57,7 +57,7 @@
         }
     </style>
 </head>
-<body>
+<body class="w3-content" style="max-width:1200px">
 <!-- Sidebar/menu -->
   <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
     <div class="w3-container w3-display-container w3-padding-16">
@@ -91,33 +91,37 @@
       <a href="/emp_login" class="w3-bar-item w3-button">Employee Login</a>
       <a href="/packageTracker" class="w3-bar-item w3-button">Track Package</a>
       {% endif %}
-
-
+    </div>
 </nav>
+ <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
+    id="myOverlay"></div>
+
+
     <div class="w3-main" style="margin-left:250px">
-    <center> <h1> Employee Login </h1> </center>
-    <div>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="notification is-danger">
-            {{ messages[0] }}
-        </div>
-        {% endif %}
-        {% endwith %}
-        <form action="/emp_login" method="post">
-            <label>Username: </label>
-            <input type="text" placeholder="Enter Username" name="username" required>
-            <label>Password: </label>
-            <input type="password" placeholder="Enter Password" name="password" required>
-            <button type="submit">Login</button>
-            <input type="checkbox" checked="checked"> Remember me
-            <div class="topnav" align="center">
-                <a class="active " href="{{ url_for('views.index') }}">
-                    Home
-                </a>
-                <a href="/packageTracker" class="w3-bar-item w3-button">Track Package</a>
+        <center> <h1> Employee Login </h1> </center>
+        <div>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
             </div>
-        </form>
+            {% endif %}
+            {% endwith %}
+            <form action="/emp_login" method="post">
+                <label>Username: </label>
+                <input type="text" placeholder="Enter Username" name="username" required>
+                <label>Password: </label>
+                <input type="password" placeholder="Enter Password" name="password" required>
+                <button type="submit">Login</button>
+                <input type="checkbox" checked="checked"> Remember me
+                <div class="topnav" align="center">
+                    <a class="active " href="{{ url_for('views.index') }}">
+                        Home
+                    </a>
+                    <a href="/packageTracker" class="w3-bar-item w3-button">Track Package</a>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
