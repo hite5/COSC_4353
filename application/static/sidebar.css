@@ -1,6 +1,10 @@
-@3-sidebar a {
-    font-family: "Roboto", sans-serif
+.w3-sidebar a {
+    font-family: "Roboto", "sans-serif"
 }
+
+.w3-button {
+            border-radius: 8px;
+        }
 
 input[type=text], input[type=password] {
     width: 100%;
@@ -12,8 +16,17 @@ input[type=text], input[type=password] {
     border-radius: 8px;
 }
 
-@button {
-    border-radius: 8px;
-}
 
-@body, h1, h2, h3, h4, h5, h6, .w3-wide { font-family: "Montserrat", sans-serif; color: #B22222 }
+.button {
+            background-color: #B22222;
+            width: 100%;
+            color: white;
+            padding: 15px;
+            margin: 10px 0px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+
+body, h1, h2, h3, h4, h5, h6, .w3-wide { font-family: "Montserrat", sans-serif; color: #B22222 }

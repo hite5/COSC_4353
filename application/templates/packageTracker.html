@@ -13,10 +13,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link rel="stylesheet" href="../static/sidebar.css">
     <style>
-        .w3-sidebar a {
-            font-family: "Roboto", sans-serif
-        }
 
         .topnav a {
             color: #000;
@@ -106,22 +104,10 @@
   <div class="w3-main" style="margin-left:250px">
       <center> <h1>UH Order History</h1> </center>
     <form action="{{ url_for("views.packTracker")}}" method ="post">
-      <div class="formcontainer">
-          {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <div class="notification is-danger">
-                        {{ messages[0] }}
-                    </div>
-                {% endif %}
-            {% endwith %}
-        <hr/>
-          <div class="container">
-            <label for="trackID"><strong>Order ID</strong></label>
-            <input type="text" pattern="\d*" placeholder="Enter Tracking ID" name="trackID" maxlength="10" minlength="10" required>
-          </div>
+      <label for="trackID"><strong>Order ID</strong></label>
+      <input type="text" pattern="\d*" placeholder="Enter Tracking ID" name="trackID" maxlength="10" minlength="10" required>
 
       <button type="submit">Track</button>
-      </div>
     </form>
   </div>
   </body>
