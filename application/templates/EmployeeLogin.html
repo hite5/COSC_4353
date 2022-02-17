@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title> UH Fuel Depot - Login Page </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
-<!--    <link rel="stylesheet" href="/static/sidebar.css"/>-->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link rel="stylesheet" href="../static/sidebar.css"/>
     <style>
 
         .topnav a {
@@ -31,23 +32,19 @@
             margin: 10px 0px;
             border: none;
             cursor: pointer;
+            border-radius: 8px;v
         }
 
         form {
             border: 3px solid #f1f1f1;
+            border-radius: 8px
         }
 
-        input[type=text], input[type=password] {
-            width: 100%;
-            margin: 8px 0;
-            padding: 12px 20px;
-            display: inline-block;
-            border: 1px solid red;
-            box-sizing: border-box;
-        }
+
 
         button:hover {
             opacity: 0.7;
+
         }
 
         .cancelbtn {
@@ -55,50 +52,57 @@
             padding: 10px 18px;
             margin: 10px 5px;
         }
+        .w3-main {
+            padding: 100px 200px;
+        }
+        .w3-button {
+            border-radius: 8px;
+        }
+        .w3-sidebar a {
+    font-family: "Roboto", sans-serif
+  }
     </style>
 </head>
-<body>
-<!--&lt;!&ndash; Sidebar/menu &ndash;&gt;-->
-<!--  <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">-->
-<!--    <div class="w3-container w3-display-container w3-padding-16">-->
-<!--      <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>-->
-<!--      <h3 class="w3-wide"><b>UH Fuel Depot</b></h3>-->
-<!--    </div>-->
-<!--    <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">-->
-<!--      <a href="{{ url_for('views.index') }}" class="w3-bar-item w3-button">Home</a>-->
-<!--      {% if current_user.is_authenticated %} &lt;!&ndash; Employees and Supervisors &ndash;&gt;-->
-<!--      <a href="{{ url_for('auth.logout') }}" class="w3-bar-item w3-button">Logout</a>-->
-<!--      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">-->
-<!--        Packages <i class="fa fa-caret-down"></i>-->
-<!--      </a>-->
-<!--      <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">-->
-<!--        <a href="/NewPackage" class="w3-bar-item w3-button">New Package</a>-->
-<!--        <a href="/packageTracker" class="w3-bar-item w3-button">Track Package</a>-->
-<!--        <a href="{{ url_for('views.packageUpdateForm') }}" class="w3-bar-item w3-button">Manage Package</a>-->
-<!--        <a href="/packageSearch" class="w3-bar-item w3-button">Search Package</a>-->
-<!--      </div>-->
-<!--      <a href="/customerSearch" class="w3-bar-item w3-button">Search Customer</a>-->
-<!--      <a href="/editCustomerSearch" class="w3-bar-item w3-button">Edit Customer</a>-->
-<!--      <a href="/EditEmployee" class="w3-bar-item w3-button">Edit Account</a>-->
-<!--      <a href="/report" class="w3-bar-item w3-button">Reports</a>-->
+<body class="w3-content" style="max-width:1200px">
+<!-- Sidebar/menu -->
+  <nav class="w3-sidebar w3-bar-block w3-black w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
+    <div class="w3-container w3-display-container w3-padding-16">
+      <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
+      <h3 class="w3-wide"><b>UH Fuel Depot</b></h3>
+    </div>
+    <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
+      <a href="{{ url_for('views.index') }}" class="w3-bar-item w3-button">Home</a>
+      {% if current_user.is_authenticated %} <!-- Employees and Supervisors -->
+      <a href="{{ url_for('auth.logout') }}" class="w3-bar-item w3-button">Logout</a>
+      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
+        Packages <i class="fa fa-caret-down"></i>
+      </a>
+      <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+        <a href="/NewPackage" class="w3-bar-item w3-button">New Order</a>
+        <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
+        <a href="{{ url_for('views.packageUpdateForm') }}" class="w3-bar-item w3-button">Manage Order</a>
+        <a href="/packageSearch" class="w3-bar-item w3-button">Search Order</a>
+      </div>
+      <a href="/customerSearch" class="w3-bar-item w3-button">Search Customer</a>
+      <a href="/editCustomerSearch" class="w3-bar-item w3-button">Edit Customer</a>
+      <a href="/EditEmployee" class="w3-bar-item w3-button">Edit Account</a>
+      <a href="/report" class="w3-bar-item w3-button">Reports</a>
 
-<!--      {% endif %}-->
-<!--      {% if current_user.type == 'supervisor' %} &lt;!&ndash; Supervisors Only &ndash;&gt;-->
-<!--      <a href="/NewEmployeeForm" class="w3-bar-item w3-button">Add New Employee</a>-->
-<!--      <a href="/employeeSearch" class="w3-bar-item w3-button">Search Employee</a>-->
-<!--      {% endif %}-->
-<!--      {% if not current_user.is_authenticated %} &lt;!&ndash; Not Logged In &ndash;&gt;-->
-<!--      <a href="/emp_login" class="w3-bar-item w3-button">Customer Login</a>-->
-<!--      <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>-->
-<!--      {% endif %}-->
+      {% endif %}
+      {% if current_user.type == 'supervisor' %} <!-- Supervisors Only -->
+      <a href="/NewEmployeeForm" class="w3-bar-item w3-button">Add New Employee</a>
+      <a href="/employeeSearch" class="w3-bar-item w3-button">Search Employee</a>
+      {% endif %}
+      {% if not current_user.is_authenticated %} <!-- Not Logged In -->
+      <a href="/emp_login" class="w3-bar-item w3-button">Customer Login</a>
+      <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
+      {% endif %}
+    </div>
 
 
 </nav>
-    <div class="w3-main" style="margin-left:500px">
-
-    <div class="w3-main" style="margin-right:500px">
-
-    <center> <h1> Customer Login </h1> </center>
+    <div class="w3-main" style="margin-left:250px">
+    <center> <h1> <b>Customer Login</b><h1> </center>
     <div>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -113,14 +117,12 @@
             <label>Password: </label>
             <input type="password" placeholder="Enter Password" name="password" required>
             <button type="submit">Login</button>
-            <input type="checkbox" checked="checked"> Remember me
-            <div class="topnav" align="center">
-                <a class="active " href="{{ url_for('views.index') }}">
-                    Home
-                </a>
-                <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
-            </div>
+            <input  type="checkbox" checked="checked"> Remember me
         </form>
+        <div>
+            <button>New Here? Create Account</button>
+        </div>
+    </div>
     </div>
 </body>
 </html>

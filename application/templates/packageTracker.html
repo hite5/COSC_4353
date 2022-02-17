@@ -1,74 +1,113 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>UH Package Tracker</title>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UH Order Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link rel="stylesheet" href="/static/sidebar.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
     <style>
-    .topnav a {
-                float: left;
-                color: #000;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-                font-size: 17px;
-      }
-      html, body {
-      display: flex;
-      justify-content: center;
-      font-family: Roboto, Arial, sans-serif;
-      font-size: 15px;
-      }
-      form {
-      border: 5px solid #f1f1f1;
-      }
-      input[type=text], input[type=password] {
-      width: 100%;
-      padding: 16px 8px;
-      margin: 8px 0;
-      display: inline-block;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      }
-      button {
-      background-color: #B22222;
-      color: white;
-      padding: 14px 0;
-      margin: 10px 0;
-      border: none;
-      cursor: grabbing;
-      width: 100%;
-      }
-      h1 {
-      text-align:center;
-      fone-size:18;
-      }
-      button:hover {
-      opacity: 0.8;
-      }
-      .formcontainer {
-      text-align: center;
-      margin: 24px 50px 12px;
-      }
-      .container {
-      padding: 16px 0;
-      text-align:center;
-      }
+        .w3-sidebar a {
+            font-family: "Roboto", sans-serif
+        }
 
-      span.psw {
-      float: right;
-      padding-top: 0;
-      padding-right: 15px;
-      }
-      /* Change styles for span on extra small screens */
-      @media screen and (max-width: 300px) {
-      span.psw {
-      display: block;
-      float: none;
-      }
+        .topnav a {
+            color: #000;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        button {
+            background-color: #B22222;
+            width: 100%;
+            color: white;
+            padding: 15px;
+            margin: 10px 0px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .w3-button {
+            border-radius: 8px;
+        }
+
+        form {
+            border: 3px solid #f1f1f1;
+        }
+
+        input[type=text], input[type=password] {
+            width: 100%;
+            margin: 8px 0;
+            padding: 12px 20px;
+            display: inline-block;
+            border: 1px solid red;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            opacity: 0.7;
+
+        }
+
+        .cancelbtn {
+            width: auto;
+            padding: 10px 18px;
+            margin: 10px 5px;
+        }
+        .w3-main {
+            padding: 100px 200px;
+        }
     </style>
   </head>
-  <body>
+  <body class="w3-content" style="max-width:1200px">
+<!-- Sidebar/menu -->
+  <nav class="w3-sidebar w3-bar-block w3-black w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
+    <div class="w3-container w3-display-container w3-padding-16">
+      <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
+      <h3 class="w3-wide"><b>UH Fuel Depot</b></h3>
+    </div>
+    <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
+      <a href="{{ url_for('views.index') }}" class="w3-bar-item w3-button">Home</a>
+      {% if current_user.is_authenticated %} <!-- Employees and Supervisors -->
+      <a href="{{ url_for('auth.logout') }}" class="w3-bar-item w3-button">Logout</a>
+      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
+        Packages <i class="fa fa-caret-down"></i>
+      </a>
+      <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+        <a href="/NewPackage" class="w3-bar-item w3-button">New Order</a>
+        <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
+        <a href="{{ url_for('views.packageUpdateForm') }}" class="w3-bar-item w3-button">Manage Order</a>
+        <a href="/packageSearch" class="w3-bar-item w3-button">Search Order</a>
+      </div>
+      <a href="/customerSearch" class="w3-bar-item w3-button">Search Customer</a>
+      <a href="/editCustomerSearch" class="w3-bar-item w3-button">Edit Customer</a>
+      <a href="/EditEmployee" class="w3-bar-item w3-button">Edit Account</a>
+      <a href="/report" class="w3-bar-item w3-button">Reports</a>
+
+      {% endif %}
+      {% if current_user.type == 'supervisor' %} <!-- Supervisors Only -->
+      <a href="/NewEmployeeForm" class="w3-bar-item w3-button">Add New Employee</a>
+      <a href="/employeeSearch" class="w3-bar-item w3-button">Search Employee</a>
+      {% endif %}
+      {% if not current_user.is_authenticated %} <!-- Not Logged In -->
+      <a href="/emp_login" class="w3-bar-item w3-button">Customer Login</a>
+      <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
+      {% endif %}
+    </div>
+  </nav>
+  <div class="w3-main" style="margin-left:250px">
+      <center> <h1>UH Order History</h1> </center>
     <form action="{{ url_for("views.packTracker")}}" method ="post">
-      <h1>UH Package Tracker</h1>
+
 
       <div class="formcontainer">
           {% with messages = get_flashed_messages() %}
@@ -80,26 +119,13 @@
             {% endwith %}
         <hr/>
           <div class="container">
-            <label for="trackID"><strong>Tracking ID</strong></label>
+            <label for="trackID"><strong>Order ID</strong></label>
             <input type="text" pattern="\d*" placeholder="Enter Tracking ID" name="trackID" maxlength="10" minlength="10" required>
           </div>
 
       <button type="submit">Track</button>
-        <div class="topnav">
-            <a class = "active "href="{{ url_for('views.index') }}">
-                Home
-            </a>
-            {% if current_user.is_authenticated %}
-
-            <a href="{{ url_for('auth.logout') }}" >
-                Logout
-            </a>
-            {% endif %}
-            {% if not current_user.is_authenticated %}
-            <a href="/emp_login" class="w3-bar-item w3-button">Employee Login</a>
-            {% endif %}
-        </div>
       </div>
     </form>
+  </div>
   </body>
 </html>
