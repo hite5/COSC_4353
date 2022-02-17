@@ -45,7 +45,6 @@
         }
 
         input[type=text], input[type=password] {
-            width: 100%;
             margin: 8px 0;
             padding: 12px 20px;
             display: inline-block;
@@ -107,8 +106,6 @@
   <div class="w3-main" style="margin-left:250px">
       <center> <h1>UH Order History</h1> </center>
     <form action="{{ url_for("views.packTracker")}}" method ="post">
-
-
       <div class="formcontainer">
           {% with messages = get_flashed_messages() %}
                 {% if messages %}

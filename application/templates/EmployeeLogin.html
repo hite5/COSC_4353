@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title> UH Fuel Depot - Login Page </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
@@ -61,7 +59,7 @@
         .w3-sidebar a {
     font-family: "Roboto", sans-serif
   }
-    </style>
+  </style>
 </head>
 <body class="w3-content" style="max-width:1200px">
 <!-- Sidebar/menu -->
@@ -98,11 +96,9 @@
       <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
       {% endif %}
     </div>
-
-
-</nav>
+  </nav>
     <div class="w3-main" style="margin-left:250px">
-    <center> <h1> <b>Customer Login</b><h1> </center>
+    <center> <h1> <b>Customer Login</b></h1> </center>
     <div>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -119,8 +115,8 @@
             <button type="submit">Login</button>
             <input  type="checkbox" checked="checked"> Remember me
         </form>
-        <div>
-            <button>New Here? Create Account</button>
+        <div style="align-items=center">
+            <button style="width:50%">New Here? Create Account</button>
         </div>
     </div>
     </div>
