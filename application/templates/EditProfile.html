@@ -45,13 +45,13 @@
         .main-block {
             justify-content: center;
             align-items: center;
-            width: 100%;
+            width: auto;
             min-height: 100%;
             background-size: cover;
         }
 
         form {
-            width: 80%;
+            width: auto;
             padding: 25px;
             margin-bottom: 20px;
             background: rgba(0, 0, 0, 0);
@@ -140,15 +140,83 @@
             </a>
         </div>
 		<form action="" method="POST">
-            <h3>Customer Information</h3>
+            <center><h3>Customer Information</h3></center>
             <div class="info">
                 <div>
-                    <input class="fname" type="text" name="fname" placeholder="First name" maxlength="15"
+                    <input class="fname" type="text" name="fname" placeholder="First name" maxlength="25"
                            value="{{ data.firstname }}" required />
-                    <input class="lname" type="text" name="lname" placeholder="Last name" maxlength="15" value="{{ data.lastname }}"
+                    <input class="lname" type="text" name="lname" placeholder="Last name" maxlength="25" value="{{ data.lastname }}"
                            required />
                     <input type="text" name="email" placeholder="Email" maxlength="30" value="{{ data.email }}" required />
                     <input type="text" name="phoneNum" placeholder="Phone number" maxlength="10" value="{{ data.phone }}"
+                           required />
+                    <input type="text" name="Address" placeholder="Address" maxlength="100" value="{{ data.address }}"
+                           required />
+                    <input type="text" name="City" placeholder="City" maxlength="100" value="{{ data.city }}"
+                           required />
+                    <h3>Select State</h3>
+
+                                <div class="State">
+                                    <select name="state" required>
+                                        <option value="text" disabled selected>State</option>
+                                        <option value="text">AL</option>
+                                        <option value="text">AK</option>
+                                        <option value="text">AZ</option>
+                                        <option value="text">AR</option>
+                                        <option value="text">CA</option>
+                                        <option value="text">CZ</option>
+                                        <option value="text">CO</option>
+                                        <option value="text">CT</option>
+                                        <option value="text">DE</option>
+                                        <option value="text">DC</option>
+                                        <option value="text">FL</option>
+                                        <option value="text">GA</option>
+                                        <option value="text">GU</option>
+                                        <option value="text">HI</option>
+                                        <option value="text">ID</option>
+                                        <option value="text">IN</option>
+                                        <option value="text">IA</option>
+                                        <option value="text">KS</option>
+                                        <option value="text">KY</option>
+                                        <option value="text">LA</option>
+                                        <option value="text">ME</option>
+                                        <option value="text">MD</option>
+                                        <option value="text">MA</option>
+                                        <option value="text">MI</option>
+                                        <option value="text">MN</option>
+                                        <option value="text">MS</option>
+                                        <option value="text">MO</option>
+                                        <option value="text">MT</option>
+                                        <option value="text">NE</option>
+                                        <option value="text">NV</option>
+                                        <option value="text">NH</option>
+                                        <option value="text">NJ</option>
+                                        <option value="text">NM</option>
+                                        <option value="text">NY</option>
+                                        <option value="text">NC</option>
+                                        <option value="text">ND</option>
+                                        <option value="text">OH</option>
+                                        <option value="text">OK</option>
+                                        <option value="text">OR</option>
+                                        <option value="text">PA</option>
+                                        <option value="text">PR</option>
+                                        <option value="text">RI</option>
+                                        <option value="text">SC</option>
+                                        <option value="text">SD</option>
+                                        <option value="text">TN</option>
+                                        <option value="text">TX</option>
+                                        <option value="text">UT</option>
+                                        <option value="text">VT</option>
+                                        <option value="text">VI</option>
+                                        <option value="text">VA</option>
+                                        <option value="text">WA</option>
+                                        <option value="text">WV</option>
+                                        <option value="text">WI</option>
+                                        <option value="text">WY</option>
+
+                                    </select>
+                                </div>
+                    <input type="text" name="zipcode" placeholder="Zip Code" maxlength="5" value="{{ data.zipcode }}"
                            required />
                 </div>
             </div>

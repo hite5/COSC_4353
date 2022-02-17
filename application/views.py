@@ -225,47 +225,47 @@ def NewCustomerForm():
         new_user = User(email = email, name = fname,
                         password = generate_password_hash(passW, method='sha256'))
 
-        try:
-            with connect(
-                host = host,
-                user = user,
-                password = password,
-                database = database
-            ) as connection:
-                print(connection)
-
-                # ADD SEQUEL SHIT
-                insert_customer = "" #do dis
-
-                with connection.cursor(buffered=True) as cursor:
-                    #cursor.execute(insert_customer)
-                    #connection.commit()
-                    cursor.execute(query)
-                    temp = cursor.fetchone()
-                    print("Successfully inputted data into DB")
-
-                    if temp is not None:
-                        flash('Email already exists')
-                        return redirect(url_for('views.NewCustomerForm'))
-                    else:
-                        cursor.execute(insert_customer)
-                        connection.commit()
-                        cursor.execute(query)
-                        temp = cursor.fetchone()
-
-                        db.session.add(new_user)
-                        db.session.commit()
-
-                        custInfo = {
-                            "fname": fname,
-                            "lname": lname,
-                            "email": email,
-                            "phoneNum": phoneNum,
-                            "cust_address": cust_address
-                        }
-                        return render_template("CustomerConfirmation.html", info=custInfo)
-        except Error as e:
-            print(e)
+        # try:
+        #     with connect(
+        #         host = host,
+        #         user = user,
+        #         password = password,
+        #         database = database
+        #     ) as connection:
+        #         print(connection)
+        #
+        #         # ADD SEQUEL SHIT
+        #         insert_customer = "" #do dis
+        #
+        #         with connection.cursor(buffered=True) as cursor:
+        #             #cursor.execute(insert_customer)
+        #             #connection.commit()
+        #             cursor.execute(query)
+        #             temp = cursor.fetchone()
+        #             print("Successfully inputted data into DB")
+        #
+        #             if temp is not None:
+        #                 flash('Email already exists')
+        #                 return redirect(url_for('views.NewCustomerForm'))
+        #             else:
+        #                 cursor.execute(insert_customer)
+        #                 connection.commit()
+        #                 cursor.execute(query)
+        #                 temp = cursor.fetchone()
+        #
+        #                 db.session.add(new_user)
+        #                 db.session.commit()
+        #
+        #                 custInfo = {
+        #                     "fname": fname,
+        #                     "lname": lname,
+        #                     "email": email,
+        #                     "phoneNum": phoneNum,
+        #                     "cust_address": cust_address
+        #                 }
+        #                 return render_template("CustomerConfirmation.html", info=custInfo)
+        # except Error as e:
+        #     print(e)
     return render_template("NewCustomerForm.html")
 
 

@@ -9,7 +9,7 @@
 
         body, input, select {
             padding: 0;
-            margin: 0;
+            margin: auto;
             outline: none;
             font-family: Roboto, Arial, sans-serif;
             font-size: 16px;
@@ -65,7 +65,7 @@
             border: none;
         }
 
-        .metod {
+        .method {
             display: flex;
         }
 
@@ -113,7 +113,7 @@
             display: block;
             width: 200px;
             padding: 10px;
-            margin: 20px auto 0;
+            margin: auto;
             border: none;
             border-radius: 5px;
             background: #B22222;
@@ -128,16 +128,16 @@
 
         @media (min-width: 568px) {
             .info {
-                flex-flow: row wrap;
+<!--                flex-flow: row wrap;-->
                 justify-content: space-between;
             }
 
             input {
-                width: 46%;
+                width: 48%;
             }
 
                 input.fname {
-                    width: 100%;
+                    width: 48%;
                 }
 
             select {
@@ -146,7 +146,7 @@
         }
 
         .topnav a {
-            float: left;
+            float: center;
             color: #000;
             text-align: center;
             padding: 14px 16px;
@@ -173,9 +173,10 @@
                 </div>
             {% endif %}
         {% endwith %}
-        <form action="{{ url_for("views.NewCustomerForm")}}" method="post">
-            <h3>Log In Information</h3>
+        <form action = {{url_for("views.NewCustomerForm")}} method="post">
+            <center><h3>Log In Information</h3></center>
             <div class="info">
+                <input type="text" name="name" placeholder="Full Name" maxlength="45" required />
                 <input type="text" name="email" placeholder="Email" maxlength="30" required />
 <!--                <input type="password" name="passW" placeholder="Temporary Password" maxlength="15" required />-->
                 <input class="fname" type="password" id="newpasswd" name="newpasswd" placeholder="Enter New Password" maxlength="15" required>
