@@ -84,21 +84,21 @@ def editCustomer(customerid):
 @views.route('/')
 def home():
     if current_user.is_authenticated:
-        return render_template('homePage.html', name=current_user.name.capitalize(),
+        return render_template('KEEPhomePage.html', name=current_user.name.capitalize(),
                                type=current_user.type.capitalize())
-    return render_template("homePage.html")
+    return render_template("KEEPhomePage.html")
 
 
 @views.route('/employee', methods=["GET", "POST"])
 @login_required
 def loggedIn():
-    return render_template("homePage.html", name=current_user.name.capitalize(),
+    return render_template("KEEPhomePage.html", name=current_user.name.capitalize(),
                            type=current_user.type.capitalize())
 
 
 @views.route('/packageTracker')
 def packTracker():
-    return render_template("packageTracker.html")
+    return render_template("KEEPorderTracker.html")
 
 
 @views.route('/packageTracker', methods=['POST'])
@@ -545,7 +545,7 @@ def packDelivery():
 
         return render_template("ConfirmationPage.html", info=orderInfo)
 
-    return render_template("fuelQuoteForm.html")
+    return render_template("KEEPfuelQuoteForm.html")
 
 
 @views.route('/Submitted', methods=["GET", "POST"])
@@ -569,7 +569,7 @@ if __name__ == '_@views__':
 
 @views.route('/')
 def index():
-    return render_template('homePage.html')
+    return render_template('KEEPhomePage.html')
 
 
 @views.route('/packageUpdateForm', methods=["GET", "POST"])

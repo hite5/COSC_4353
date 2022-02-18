@@ -23,6 +23,17 @@
             text-decoration: none;
             font-size: 17px;
         }
+        .content-table {
+            text-align: center;
+            padding: 100px 200px;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            min-width: 400px;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
 
         button {
             background-color: #B22222;
@@ -102,13 +113,31 @@
     </div>
   </nav>
   <div class="w3-main" style="margin-left:250px">
-      <center> <h1>UH Order History</h1> </center>
+      <center> <h1>Order History</h1> </center>
     <form action="{{ url_for("views.packTracker")}}" method ="post">
       <label for="trackID"><strong>Order ID</strong></label>
       <input type="text" pattern="\d*" placeholder="Enter Tracking ID" name="trackID" maxlength="10" minlength="10" required>
 
       <button type="submit">Track</button>
     </form>
+    <table class="content-table">
+    <tr>
+      <th>Company</th>
+      <th>Contact</th>
+      <th>Country</th>
+    </tr>
+    <tr>
+      <td>Alfreds Futterkiste</td>
+      <td>Maria Anders</td>
+      <td>Germany</td>
+    </tr>
+    <tr>
+      <td>Centro comercial Moctezuma</td>
+      <td>Francisco Chang</td>
+      <td>Mexico</td>
+    </tr>
+  </table>
   </div>
+
   </body>
 </html>

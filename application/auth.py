@@ -9,7 +9,7 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/emp_login')
 def emp_login():
-    return render_template("EmployeeLogin.html")
+    return render_template("KEEPLogin.html")
 
 
 @auth.route('/signup')
@@ -21,7 +21,7 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    return render_template("homePage.html")
+    return render_template("KEEPhomePage.html")
 
 
 @auth.route('/signup', methods=['POST'])
