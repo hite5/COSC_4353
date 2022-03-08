@@ -8,10 +8,10 @@ import datetime
 
 views = Blueprint('views', __name__)
 
-host = "team-8.mysql.database.azure.com"
-user = "team8@team-8"
-password = "Coogshouse#1"
-database = "group_8_postoffice"
+host = "localhost"
+user = "root"
+password = "coogshouse"
+database = "group_5"
 
 # Edit Customer Search
 @views.route('/editCustomerSearch', methods=["GET", "POST"])
