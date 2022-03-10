@@ -209,12 +209,12 @@ def tracking():
 @views.route('/NewCustomerForm', methods=["GET", "POST"])
 def NewCustomerForm():
     if request.method == "POST":
-        fname = request.form.get("fname")
-        lname = request.form.get("lname")
-        passW = request.form.get("passW")
+        fname = request.form.get("f_name")
+        lname = request.form.get("l_name")
+        passW = request.form.get("newpasswd")
         email = request.form.get("email")
-        phoneNum = request.form.get("phoneNum")
-        cust_address = request.form.get("cust_address")
+        # phoneNum = request.form.get("phoneNum")
+        # cust_address = request.form.get("cust_address")
 
         #if user already exists, redirect back to signup form
         user1 = User.query.filter_by(email=email).first()

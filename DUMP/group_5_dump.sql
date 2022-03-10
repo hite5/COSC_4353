@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `group_5_db` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `group_5_db`;
 -- MySQL dump 10.13  Distrib 8.0.16, for macos10.14 (x86_64)
 --
 -- Host: 127.0.0.1    Database: group_5_db
@@ -32,6 +34,15 @@ CREATE TABLE `inventory` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `inventory`
+--
+
+LOCK TABLES `inventory` WRITE;
+/*!40000 ALTER TABLE `inventory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `inventory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `quotes`
 --
 
@@ -57,6 +68,15 @@ CREATE TABLE `quotes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `quotes`
+--
+
+LOCK TABLES `quotes` WRITE;
+/*!40000 ALTER TABLE `quotes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `quotes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -79,6 +99,15 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping events for database 'group_5_db'
 --
 
@@ -95,4 +124,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-08 17:50:32
+-- Dump completed on 2022-03-09 18:34:41
