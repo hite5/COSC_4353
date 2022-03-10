@@ -5,13 +5,15 @@ from flask_login import login_required, current_user
 from . import db
 from .models import User, login_required_test
 import datetime
+import pgeocode
+
 
 views = Blueprint('views', __name__)
 
 host = "localhost"
 user = "root"
 password = "coogshouse"
-database = "group_5"
+database = "group_5_db"
 
 # Edit Customer Search
 @views.route('/editCustomerSearch', methods=["GET", "POST"])
@@ -213,9 +215,7 @@ def NewCustomerForm():
         lname = request.form.get("l_name")
         passW = request.form.get("newpasswd")
         email = request.form.get("email")
-        # phoneNum = request.form.get("phoneNum")
-        # cust_address = request.form.get("cust_address")
-
+#WORK HERE ^^^^^^^
         #if user already exists, redirect back to signup form
         user1 = User.query.filter_by(email=email).first()
         if user1:
@@ -224,7 +224,7 @@ def NewCustomerForm():
 
         new_user = User(email = email, name = fname,
                         password = generate_password_hash(passW, method='sha256'))
-
+#FIX THIS ^^^^^^^^ GO TO AUTH.py and Models.py to fix db.sqlite
         # try:
         #     with connect(
         #         host = host,
@@ -269,9 +269,9 @@ def NewCustomerForm():
     return render_template("NewCustomerForm.html")
 
 
-@views.route('/EditEmployee', methods=["GET", "POST"])
+@views.route('/EditProfile', methods=["GET", "POST"])
 @login_required
-def editEmployee():
+def EditProfile():
     try:
         with connect(
                 host=host,
@@ -311,7 +311,7 @@ def editEmployee():
                 if (emailexists and (
                         current_user.email != email)):  # if a user is found, we want to redirect back to edit page so user can try again
                     flash('Email address belongs to another employee. Please enter an email that belongs to you.')
-                    return redirect(url_for('views.editEmployee'))
+                    return redirect(url_for('views.EditProfile'))
 
                 phone = request.form.get('phoneNum')
 
@@ -326,7 +326,7 @@ def editEmployee():
                 current_user.email = email
                 db.session.commit()
                 flash('Profile successfully updated.')
-                return redirect(url_for('views.editEmployee'))
+                return redirect(url_for('views.EditProfile'))
 
             else:  # GET
                 return render_template("EditProfile.html", data=data)

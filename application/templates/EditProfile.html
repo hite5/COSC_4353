@@ -156,7 +156,7 @@
 <!--      <a href="/customerSearch" class="w3-bar-item w3-button">Search Customer</a>-->
 <!--      <a href="/editCustomerSearch" class="w3-bar-item w3-button">Edit Customer</a>-->
 <!--      <a href="/EditEmployee" class="w3-bar-item w3-button">Edit Account</a>-->
-        <a href="/EditEmployee" class="w3-bar-item w3-button">Edit Account</a>
+        <a href="/EditProfile" class="w3-bar-item w3-button">Edit Account</a>
         <a href="/report" class="w3-bar-item w3-button">Order Reports</a>
 
       {% endif %}
@@ -207,7 +207,6 @@
                     <input type="text" name="City" placeholder="City" maxlength="100" value="{{ data.city }}"
                            required />
                     <h3>Select State</h3>
-
                                 <div class="State">
                                     <select name="state" required>
                                         <option value="text" disabled selected>State</option>
@@ -265,7 +264,6 @@
                                         <option value="text">WV</option>
                                         <option value="text">WI</option>
                                         <option value="text">WY</option>
-
                                     </select>
                                 </div>
                     <input type="text" name="zipcode" placeholder="Zip Code" maxlength="5" value="{{ data.zipcode }}"
