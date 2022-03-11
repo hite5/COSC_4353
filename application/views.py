@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, request, Blueprint, flash, current_app
+from flask import Flask, request, render_template, redirect, url_for, request, Blueprint, flash, current_app, jsonify
 from mysql.connector import connect, Error
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
@@ -537,6 +537,43 @@ def packDelivery():
         return render_template("ConfirmationPage.html", info=orderInfo)
 
     return render_template("KEEPfuelQuoteForm.html")
+
+
+@views.route('/heelo')
+def dosomething():
+    return render_template("testingAjax.html")
+
+# @views.route('/process', methods=['POST'])
+# def process():
+#     email = request.form['email']
+#     name = request.form['name']
+#
+#     if name and email:
+#         newName = name[::-1]
+#
+#         return jsonify({'name' : newName})
+#
+#     return jsonify({'error' : 'Missing data!'})
+
+
+@views.route('/quoteCalc', methods=['POST'])
+def CalcProcess():
+    zipcode = request.form['zipcode']
+    gallons = request.form['gallons']
+
+    if zipcode and gallons:
+        dist = pgeocode.GeoDistance('US')
+        newdist = dist.query_postal_code("77204", zipcode)
+        cost = 10 * int(gallons)
+        totalcost = int(cost + (newdist * 7))
+
+        cost = "$" + str(cost)
+        totalcost = "$" + str(totalcost)
+
+
+        return jsonify({"cost": cost, "totalcost": totalcost})
+
+    return jsonify({'error' : 'Missing data!'})
 
 
 @views.route('/Submitted', methods=["GET", "POST"])

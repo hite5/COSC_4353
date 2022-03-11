@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>AJAX Example</title>
+
+
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+ <script type="text/javascript">
+    $(document).on('submit','#todo-form',function(e)
+                   {
+      console.log('hello');
+      e.preventDefault();
+      $.ajax({
+		data : {
+			name : $('#nameInput').val(),
+			email : $('#emailInput').val()
+		},
+        type:'POST',
+        url:'/process',
+        success:function(data)
+        {
+          console.log("getting somewhere")
+			if (data.error) {
+				$('#errorAlert').text(data.error);
+
+			}
+			else {
+				$('#successAlert').text(data.name);
+
+			}
+        }
+      })
+    });
+  </script>
+
+
+
+<div class="container">
+	<br><br><br><br>
+	<form method = "post" id = "todo-form">
+	  <div class="form-group">
+	    <label class="sr-only" for="emailInput">Email address</label>
+	    <input type="email" class="form-control" id="emailInput" placeholder="Email">
+	  </div>
+	  <div class="form-group">
+	    <label class="sr-only" for="nameInput">Name</label>
+	    <input type="text" class="form-control" id="nameInput" placeholder="First Name">
+	  </div>
+	  <button type="submit">Submit</button>
+	</form>
+	<br>
+	<div id="successAlert" >asdf</div>
+	<div id="errorAlert" >fadsggghh</div>
+</div>
+</body>
+</html>
