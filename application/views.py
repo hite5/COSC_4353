@@ -3,7 +3,8 @@ from mysql.connector import connect, Error
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
 from . import db
-from .models import User, login_required_test
+from .models import User
+     # , login_required_test
 import datetime
 import pgeocode
 
@@ -86,8 +87,7 @@ def editCustomer(customerid):
 @views.route('/')
 def home():
     if current_user.is_authenticated:
-        return render_template('KEEPhomePage.html', name=current_user.name.capitalize(),
-                               type=current_user.type.capitalize())
+        return render_template('KEEPhomePage.html', name=current_user.name.capitalize())
     return render_template("KEEPhomePage.html")
 
 
@@ -213,60 +213,63 @@ def NewCustomerForm():
     if request.method == "POST":
         fname = request.form.get("f_name")
         lname = request.form.get("l_name")
-        passW = request.form.get("newpasswd")
         email = request.form.get("email")
-#WORK HERE ^^^^^^^
+        passW = request.form.get("newpasswd")
+
         #if user already exists, redirect back to signup form
         user1 = User.query.filter_by(email=email).first()
         if user1:
             flash('Email address already exists')
             return redirect(url_for('views.NewCustomerForm'))
-
+    # create a new user with the form data. Hash the password so the plaintext version isn't saved.
         new_user = User(email = email, name = fname,
                         password = generate_password_hash(passW, method='sha256'))
-#FIX THIS ^^^^^^^^ GO TO AUTH.py and Models.py to fix db.sqlite
-        # try:
-        #     with connect(
-        #         host = host,
-        #         user = user,
-        #         password = password,
-        #         database = database
-        #     ) as connection:
-        #         print(connection)
-        #
-        #         # ADD SEQUEL SHIT
-        #         insert_customer = "" #do dis
-        #
-        #         with connection.cursor(buffered=True) as cursor:
-        #             #cursor.execute(insert_customer)
-        #             #connection.commit()
-        #             cursor.execute(query)
-        #             temp = cursor.fetchone()
-        #             print("Successfully inputted data into DB")
-        #
-        #             if temp is not None:
-        #                 flash('Email already exists')
-        #                 return redirect(url_for('views.NewCustomerForm'))
-        #             else:
-        #                 cursor.execute(insert_customer)
-        #                 connection.commit()
-        #                 cursor.execute(query)
-        #                 temp = cursor.fetchone()
-        #
-        #                 db.session.add(new_user)
-        #                 db.session.commit()
-        #
-        #                 custInfo = {
-        #                     "fname": fname,
-        #                     "lname": lname,
-        #                     "email": email,
-        #                     "phoneNum": phoneNum,
-        #                     "cust_address": cust_address
-        #                 }
-        #                 return render_template("CustomerConfirmation.html", info=custInfo)
-        # except Error as e:
-        #     print(e)
+
+        try:
+            with connect(
+                host = host,
+                user = user,
+                password = password,
+                database = database
+            ) as connection:
+                print(connection)
+
+                # ADD SEQUEL SHIT
+                insert_customer = "INSERT INTO users (first_name, last_name, email, password) " \
+                                  "VALUES " \
+                                  "('" + fname + "','" + lname + "','" + email + "','" + passW + "');"
+
+                with connection.cursor(buffered=True) as cursor:
+                    #cursor.execute(insert_customer)
+                    #connection.commit()
+                    # cursor.execute(query)
+                    # temp = cursor.fetchone()
+                    print("Successfully inputted data into DB")
+
+                    # if temp is not None:
+                    #     flash('Email already exists')
+                    #     return redirect(url_for('views.NewCustomerForm'))
+                    # else:
+                    cursor.execute(insert_customer)
+                    connection.commit()
+                    # cursor.execute(query)
+                    # temp = cursor.fetchone()
+
+                    db.session.add(new_user)
+                    db.session.commit()
+
+                        # custInfo = {
+                        #     "fname": fname,
+                        #     "lname": lname,
+                        #     "email": email,
+                        #     "phoneNum": phoneNum,
+                        #     "cust_address": cust_address
+                        # }
+                        # return render_template("CustomerConfirmation.html", info=custInfo)
+        except Error as e:
+            print(e)
     return render_template("NewCustomerForm.html")
+
 
 
 @views.route('/EditProfile', methods=["GET", "POST"])
@@ -769,97 +772,97 @@ def custQuery():
     return "Finished."
 
 
-@views.route('/employeeSearch')#, methods=["GET", "POST"])
-@login_required_test(role="supervisor")
-def employeeSearch():
-    return render_template("EmployeeSearch.html")
-
-@views.route('/employeeSearch', methods = ["POST"])
-@login_required_test(role="supervisor")
-def empQuery():
-    with connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
-    ) as connection:
-        print(connection)
-        cursor = connection.cursor(buffered=True)
-
-        branchID = request.form.get("branchSearch")
-        empID = request.form.get("IDsearch")
-        name = request.form.get("nameSearch")
-
-        if branchID is not None:
-            bid = request.form.get("branchID")
-            if bid is None:
-                flash('Please input data in the desired search field.')
-                return redirect(url_for('views.employeeSearch'))
-                # print("BID IS EMPTY")
-            bquery = " SELECT Emp_ID, F_Name, L_Name, Ph_num, email, Employee_type, " \
-                     "office_num, date_hired FROM employee WHERE office_num = " + bid + "; "
-            cursor.execute(bquery)
-            result = cursor.fetchall()
-            data = []
-            for row in result:
-                # print(row)
-                data.append(row)
-            headers = ['Employee ID', 'First Name', 'Last Name', 'Phone Number', 'Email', 'Role', 'Branch ID', 'Date Hired']
-
-            return render_template("QueryOutput.html", heading=headers, data=data, search_type="Branch ID",
-                                   query=bid)
-
-        elif empID is not None:
-            eid = request.form.get("eid")
-            if eid == "":
-                flash('Please input data in the desired search field.', 'error')
-                return redirect(url_for('views.employeeSearch'))
-
-            equery = " SELECT Emp_ID, F_Name, L_Name, Ph_num, email, Employee_type, office_num," \
-                     " date_hired FROM employee WHERE Emp_ID = " + eid + " ; "
-            cursor.execute(equery)
-            result = cursor.fetchall()
-            if len(result) == 0:
-                flash("The employee ID does not exist.", 'error')
-                return redirect(url_for('views.employeeSearch'))
-            data = []
-            for row in result:
-                # print(row)
-                data.append(row)
-            headers = ['Employee ID', 'First Name', 'Last Name', 'Phone Number', 'Email', 'Role', 'Branch ID',
-                       'Date Hired']
-
-            return render_template("QueryOutput.html", heading=headers, data=data, search_type="Employee ID",
-                                   query=eid)
-
-        elif name is not None:
-            # fpid = request.form.get("fname")
-            lpid = request.form.get("lname")
-            if lpid == "":
-                flash('Please input data in the desired search field.','error')
-                return redirect(url_for('views.employeeSearch'))
-
-            nquery = " SELECT Emp_ID, F_Name, L_Name, Ph_num, email, Employee_type, office_num," \
-                    " date_hired FROM employee WHERE L_name = '" + lpid + "'; "
-            cursor.execute(nquery)
-            result = cursor.fetchall()
-            if len(result) == 0:
-                flash("The employee does not exist.",'error')
-                return redirect(url_for('views.employeeSearch'))
-            data = []
-            for row in result:
-                # print(row)
-                data.append(row)
-            headers = ['Employee ID', 'First Name', 'Last Name', 'Phone Number', 'Email', 'Role', 'Branch ID',
-                       'Date Hired']
-
-            return render_template("QueryOutput.html", heading=headers, data=data, search_type="Employee Last Name",
-                                   query=lpid)
-
-        else:
-            print("Error")
-
-        return "Finished."
+# @views.route('/employeeSearch')#, methods=["GET", "POST"])
+# @login_required_test(role="supervisor")
+# def employeeSearch():
+#     return render_template("EmployeeSearch.html")
+#
+# @views.route('/employeeSearch', methods = ["POST"])
+# @login_required_test(role="supervisor")
+# def empQuery():
+#     with connect(
+#             host=host,
+#             user=user,
+#             password=password,
+#             database=database
+#     ) as connection:
+#         print(connection)
+#         cursor = connection.cursor(buffered=True)
+#
+#         branchID = request.form.get("branchSearch")
+#         empID = request.form.get("IDsearch")
+#         name = request.form.get("nameSearch")
+#
+#         if branchID is not None:
+#             bid = request.form.get("branchID")
+#             if bid is None:
+#                 flash('Please input data in the desired search field.')
+#                 return redirect(url_for('views.employeeSearch'))
+#                 # print("BID IS EMPTY")
+#             bquery = " SELECT Emp_ID, F_Name, L_Name, Ph_num, email, Employee_type, " \
+#                      "office_num, date_hired FROM employee WHERE office_num = " + bid + "; "
+#             cursor.execute(bquery)
+#             result = cursor.fetchall()
+#             data = []
+#             for row in result:
+#                 # print(row)
+#                 data.append(row)
+#             headers = ['Employee ID', 'First Name', 'Last Name', 'Phone Number', 'Email', 'Role', 'Branch ID', 'Date Hired']
+#
+#             return render_template("QueryOutput.html", heading=headers, data=data, search_type="Branch ID",
+#                                    query=bid)
+#
+#         elif empID is not None:
+#             eid = request.form.get("eid")
+#             if eid == "":
+#                 flash('Please input data in the desired search field.', 'error')
+#                 return redirect(url_for('views.employeeSearch'))
+#
+#             equery = " SELECT Emp_ID, F_Name, L_Name, Ph_num, email, Employee_type, office_num," \
+#                      " date_hired FROM employee WHERE Emp_ID = " + eid + " ; "
+#             cursor.execute(equery)
+#             result = cursor.fetchall()
+#             if len(result) == 0:
+#                 flash("The employee ID does not exist.", 'error')
+#                 return redirect(url_for('views.employeeSearch'))
+#             data = []
+#             for row in result:
+#                 # print(row)
+#                 data.append(row)
+#             headers = ['Employee ID', 'First Name', 'Last Name', 'Phone Number', 'Email', 'Role', 'Branch ID',
+#                        'Date Hired']
+#
+#             return render_template("QueryOutput.html", heading=headers, data=data, search_type="Employee ID",
+#                                    query=eid)
+#
+#         elif name is not None:
+#             # fpid = request.form.get("fname")
+#             lpid = request.form.get("lname")
+#             if lpid == "":
+#                 flash('Please input data in the desired search field.','error')
+#                 return redirect(url_for('views.employeeSearch'))
+#
+#             nquery = " SELECT Emp_ID, F_Name, L_Name, Ph_num, email, Employee_type, office_num," \
+#                     " date_hired FROM employee WHERE L_name = '" + lpid + "'; "
+#             cursor.execute(nquery)
+#             result = cursor.fetchall()
+#             if len(result) == 0:
+#                 flash("The employee does not exist.",'error')
+#                 return redirect(url_for('views.employeeSearch'))
+#             data = []
+#             for row in result:
+#                 # print(row)
+#                 data.append(row)
+#             headers = ['Employee ID', 'First Name', 'Last Name', 'Phone Number', 'Email', 'Role', 'Branch ID',
+#                        'Date Hired']
+#
+#             return render_template("QueryOutput.html", heading=headers, data=data, search_type="Employee Last Name",
+#                                    query=lpid)
+#
+#         else:
+#             print("Error")
+#
+#         return "Finished."
 
 
 @views.route('/packageSearch')
