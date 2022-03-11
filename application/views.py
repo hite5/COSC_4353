@@ -4,7 +4,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
 from . import db
 from .models import User
-     # , login_required_test
 import datetime
 import pgeocode
 
@@ -215,13 +214,19 @@ def NewCustomerForm():
         lname = request.form.get("l_name")
         email = request.form.get("email")
         passW = request.form.get("newpasswd")
+        phone = request.form.get("phoneNum")
+        address = request.form.get("Address")
+        city = request.form.get("City")
+        state = request.form.get("state")
+        zip = request.form.get("zipcode")
 
         #if user already exists, redirect back to signup form
         user1 = User.query.filter_by(email=email).first()
         if user1:
             flash('Email address already exists')
             return redirect(url_for('views.NewCustomerForm'))
-    # create a new user with the form data. Hash the password so the plaintext version isn't saved.
+
+         # create a new user with the form data. Hash the password so the plaintext version isn't saved.
         new_user = User(email = email, name = fname,
                         password = generate_password_hash(passW, method='sha256'))
 
@@ -234,38 +239,21 @@ def NewCustomerForm():
             ) as connection:
                 print(connection)
 
-                # ADD SEQUEL SHIT
-                insert_customer = "INSERT INTO users (first_name, last_name, email, password) " \
+                insert_customer = "INSERT INTO users (first_name, last_name, email, password, phone, address, city, state, zip) " \
                                   "VALUES " \
-                                  "('" + fname + "','" + lname + "','" + email + "','" + passW + "');"
+                                  "('" + fname + "','" + lname + "','" + email + "','" + passW + "','" + phone + "'," \
+                                    "'" + address + "','" + city + "','" + state + "','" + zip + "');"
 
                 with connection.cursor(buffered=True) as cursor:
-                    #cursor.execute(insert_customer)
-                    #connection.commit()
-                    # cursor.execute(query)
-                    # temp = cursor.fetchone()
+
                     print("Successfully inputted data into DB")
 
-                    # if temp is not None:
-                    #     flash('Email already exists')
-                    #     return redirect(url_for('views.NewCustomerForm'))
-                    # else:
                     cursor.execute(insert_customer)
                     connection.commit()
-                    # cursor.execute(query)
-                    # temp = cursor.fetchone()
 
                     db.session.add(new_user)
                     db.session.commit()
 
-                        # custInfo = {
-                        #     "fname": fname,
-                        #     "lname": lname,
-                        #     "email": email,
-                        #     "phoneNum": phoneNum,
-                        #     "cust_address": cust_address
-                        # }
-                        # return render_template("CustomerConfirmation.html", info=custInfo)
         except Error as e:
             print(e)
     return render_template("NewCustomerForm.html")
