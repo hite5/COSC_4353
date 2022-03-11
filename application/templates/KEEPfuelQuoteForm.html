@@ -177,6 +177,41 @@
 </head>
 
 <body class="w3-content" style="max-width:1200px">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script type="text/javascript">
+    $(document).on('submit','#calculator',function(e)
+                   {
+      console.log('hello');
+      e.preventDefault();
+      $.ajax({
+        data : {
+            zipcode : $('#zipcode').val(),
+            gallons : $('#gallons').val()
+        },
+        type:'POST',
+        url:'/quoteCalc',
+        success:function(data)
+        {
+          console.log("getting somewhere")
+            if (data.error) {
+                $('#cost').text("$0 ERROR");
+                $('#totalcost').text("$0");
+
+            }
+            else {
+                $('#cost').text(data.cost);
+                $('#totalcost').text(data.totalcost);
+
+            }
+        }
+      })
+    });
+    </script>
+
+
+
      <!-- Sidebar/menu -->
   <nav class="w3-sidebar w3-bar-block w3-black w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
     <div class="w3-container w3-display-container w3-padding-16">
@@ -289,20 +324,31 @@
 <!--                <input type="checkbox" value="30" id="checkbox" name="etc" />-->
 <!--            </div>-->
 <!--        </div>-->
-        <div>
-            <button href="/" class="button">Calculate Costs</button>
-        </div>
 
-        <H3><br>Suggested Price (Without express costs)<br></H3>
-        <H2>$300</H2>
-        <H3>Total Cost<br></H3>
-        <H2>$600</H2>
 
 
 
         <button href="/" class="button">Continue</button>
 
         </form>
+
+        <form method = "post" id = "calculator">
+
+
+            <input type="text" pattern="\d*" id="gallons" name="gallons" placeholder="Gallons Requested" maxlength = "10" minlength = "1" required/>
+            <input type="text" pattern="\d*" id="zipcode" name="zip" placeholder="ZIP CODE" maxlength = "5" minlength = "5" required/>
+
+
+            <H3><br>Suggested Price (Without shipping costs)<br></H3>
+            <H2 id = cost>$0</H2>
+            <H3>Total Cost<br></H3>
+            <H2 id = totalcost>$0</H2>
+            <div>
+                <button type="submit" class="button">Calculate Costs</button>
+            </div>
+
+        </form>
+
     </div>
     </div>
 </body>
