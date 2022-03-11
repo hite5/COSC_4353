@@ -271,7 +271,7 @@ def EditProfile():
                 database=database
         ) as connection:
             cursor = connection.cursor(buffered=True)
-            query = f"SELECT F_Name, L_Name, email, Ph_num, Emp_ID FROM employee WHERE email = '{current_user.email}'"
+            query = f"SELECT first_name, last_name, email, phone, user_id FROM users WHERE email = '{current_user.email}'"
             cursor.execute(query)
             result = cursor.fetchone()
             if result is None:
@@ -282,18 +282,23 @@ def EditProfile():
                 "lastname": result[1],
                 "email": result[2],
                 "phone": result[3],
-                "id": result[4]
+                "id": result[4],
             }
 
             if request.method == "POST":
                 # Retrieve form data
                 firstname = request.form.get('fname')
                 lastname = request.form.get('lname')
-
+                phone = request.form.get('phoneNum')
+                address = request.form.get('Address')
+                city = request.form.get('City')
+                state = request.form.get('state')
+                zip = request.form.get('zipcode')
                 email = request.form.get('email')
+
                 user1 = User.query.filter_by(email=email).first() # checking for email in sqlite
 
-                emailquery = f"SELECT F_name FROM employee WHERE email='{email}'" # checking for email in mysql
+                emailquery = f"SELECT first_name FROM users WHERE email='{email}'" # checking for email in mysql
                 cursor.execute(emailquery)
                 emailcheck = cursor.fetchone()
                 
@@ -301,15 +306,15 @@ def EditProfile():
 
                 if (emailexists and (
                         current_user.email != email)):  # if a user is found, we want to redirect back to edit page so user can try again
-                    flash('Email address belongs to another employee. Please enter an email that belongs to you.')
+                    flash('Email address belongs to another user. Please enter an email that belongs to you.')
                     return redirect(url_for('views.EditProfile'))
 
                 phone = request.form.get('phoneNum')
 
-                edit_employee = f"UPDATE employee SET F_Name = '{firstname}', L_Name = '{lastname}', email = '{email}', Ph_num = '{phone}' WHERE Emp_ID = '{data['id']}';"
+                edit_profile = f"UPDATE users SET first_name = '{firstname}', last_name = '{lastname}', email = '{email}', phone = '{phone}' , address = '{address}', city ='{city}', state = '{state}', zip='{zip}' WHERE user_id = '{data['id']}';"
                 
                 # mysql changes
-                cursor.execute(edit_employee)
+                cursor.execute(edit_profile)
                 connection.commit()
 
                 # sqlite changes
@@ -327,214 +332,214 @@ def EditProfile():
         return render_template("EditProfile.html", data=0)
 
 
-@views.route('/NewPackage', methods=["GET", "POST"])
+@views.route('/NewOrder', methods=["GET", "POST"])
 @login_required
 def packDelivery():
-    if request.method == "POST":
-        send_fname = request.form.get("s_fname")
-        send_lname = request.form.get("s_lname")
-        rec_fname = request.form.get("r_fname")
-        rec_lname = request.form.get("r_lname")
-        send_email = request.form.get("s_email")
-        send_phoneNum = request.form.get("s_phoneNum")
-        rec_email = request.form.get("r_email")
-        rec_phoneNum = request.form.get("r_phoneNum")
-        return_add = request.form.get("custAdd")
-        destAddress = request.form.get("destAdd")
-        weight = int(request.form.get("weight"))
-        width = int(request.form.get("width"))
-        height = int(request.form.get("height"))
-        length = int(request.form.get("length"))
-        checkboxes = request.form.getlist("etc")
-        delivery = int(request.form.get("delivery"))
-        employeeID = request.form.get("employeeID")
-        fragile = 0
-        insurance = 1
-        for checks in checkboxes:
-            if checks == '20':
-                fragile = 1
-            elif checks == '30':
-                insurance = 1.2
-
-        price = ((width * height * length) * weight) * .01 * insurance * delivery
-        price = ("%.2f" % price)
-        print(price)
-        # add a redirect to bring the user to a page where it shows that your package is being sent
-        # and what the cost of the package is.
-        # return redirect(url_for('packTracker'))
-
-        try:
-            with connect(
-                    host=host,
-                    user=user,
-                    password=password,
-                    database=database
-            ) as connection:
-                print(connection)
-
-                # Need to make a query to the DB and check to see if there is matching values
-                # for the sending customer or the receiving customer
-                # If there isn't a record of the receiving customer:
-                # Create a new customer
-                # If there isn't a record of the sending customer:
-                # Create a new customer
-                # If there isn't a record of both:
-                # Create two new customers
-                # Else skip creating customers
-
-                # Take the customer information (in particular the customer ID) that was either created or queried,
-                # and create a new package entry for the database.
-                # Make sure that we have the receiving customer's customerID
-                # and sender's customerID to add to the package entry.
-                # insert_package = "INSERT INTO package VALUES (1001,'p',0,8,100,1,'pending',now(),007,1,00.00);"
-                show_change = "select * from customer;"
-                # show_package = "select * from package;"
-
-                with connection.cursor(buffered=True) as cursor:
-                    # query to get the branchID based off the employeeID inserting it.
-                    branchQ = """SELECT office_num
-                                                 FROM employee
-                                                 WHERE Emp_ID = """ + employeeID + ';'
-                    cursor.execute(branchQ)
-                    branchResult = cursor.fetchone()
-                    if branchResult is None:
-                        flash("Employee ID is invalid")
-                        return redirect(url_for('views.packDelivery'))
-                    branchID = branchResult[0]
-                    s_query = "SELECT Cust_ID FROM customer WHERE Fname = '" + send_fname + "' AND lname = '" + send_lname + "' AND email = '" + send_email + "' AND phone_no = '" + send_phoneNum + "' AND address = '" + return_add + "';"
-
-                    r_query = "SELECT Cust_ID FROM customer WHERE Fname = '" + rec_fname + "' AND lname = '" + rec_lname + "' AND email = '" + rec_email + "' AND phone_no = '" + rec_phoneNum + "' AND address = '" + destAddress + "';"
-                    cursor.execute(s_query) # returns none or what the db has for this customer
-                    senderResult = cursor.fetchone()
-
-                    if senderResult is None:
-                        print("Sender query")
-                        # no results, insert into customer table
-                        # call cursor.execute again and get temp[0] as the sender ID
-                        insert_customer = "INSERT INTO customer (fname, lname, email, phone_no, address, date_joined) VALUES ('" \
-                                          + send_fname + "','" + send_lname + "','" + send_email + "','" + send_phoneNum \
-                                          + "','" + return_add + "', now() );"
-                        cursor.execute(insert_customer)
-                        connection.commit()
-                        print("In between insert_customer and s_query")
-                        cursor.execute(s_query)
-                        senderResult = cursor.fetchone() # returns result of the senders newly inserted info
-                        print("Sender Result")
-                        print(senderResult)
-
-
-                    senderID = senderResult[0]
-
-                    cursor.execute(r_query)
-                    receiverResult = cursor.fetchone() # returns none or what the db has for this customer
-                    if receiverResult == None:
-                        print("\nReceiver query")
-                        # no results, insert into customer table
-                        # call cursor.execute again and get temp[0] as the sender ID
-                        insert_customer = "INSERT INTO customer (fname, lname, email, phone_no, address, date_joined) VALUES ('" \
-                                          + rec_fname + "','" + rec_lname + "','" + rec_email + "','" + rec_phoneNum \
-                                          + "','" + destAddress + "', now() );"
-                        cursor.execute(insert_customer)
-                        connection.commit()
-                        cursor.execute(r_query)
-                        receiverResult = cursor.fetchone() # returns result of the senders newly inserted info
-                        print("Receiver Result ======== ")
-                        print(receiverResult)
-
-                    recID = receiverResult[0]
-
-                    insert_package = "INSERT INTO package(P_type, isFragile, weight, " \
-                                     "insurance, status, Sender, Reciever, length, width, height)"
-
-                    if delivery == 1:
-                        if insurance == 1:
-                            insert_package += " VALUES('s'" \
-                                              ", " + str(fragile) + " , " + str(weight) + ", 0, " \
-                                                                                          "'pending', " + str(
-                                senderID) + " , " + str(recID) + ", " \
-                                                                 " " + str(length) + ", " + str(width) + ", " + str(
-                                height) + ");"
-                            priority = 's'
-                            insurance1 = 0
-
-                        else:
-                            priority = 's'
-                            insurance1 = 1
-                            insert_package += " VALUES('s'" \
-                                              ", " + str(fragile) + " , " + str(weight) + ", 1, " \
-                                                                                          "'pending', " + str(
-                                senderID) + " , " + str(recID) + ", " \
-                                                                 " " + str(length) + ", " + str(width) + ", " + str(
-                                height) + ");"
-
-                    else:
-                        if (insurance == 1):
-                            priority = 'p'
-                            insurance1 = 0
-                            insert_package += " VALUES('p', " + str(fragile) + " , " + str(weight) + ", 0, 'pending" \
-                                              "', " + str(senderID) + " , " + str(recID) + ",  " + str(length) + ", " + str(width) + ", " + str(height) + ");"
-                        else:
-                            priority = 'p'
-                            insurance1 = 1
-                            insert_package += " VALUES('p', " + str(fragile) + " , " + str(weight) + ", 1, 'pending', " \
-                                              "" + str(senderID) + " , " + str(recID) + ", " + str(length) + ", " + str(width) + ", " + str(height) + ");"
-
-
-                    cursor.execute(insert_package)
-                    print("Insert Package query")
-                    connection.commit()
-
-                    getPackageID = "SELECT package.ID FROM package " \
-                                   "WHERE P_type = '" + priority + "' AND isFragile = " + str(fragile) + "" \
-                                   " AND weight = " + str(weight) + " AND insurance = " + str(insurance1) + " AND " \
-                                   "status = 'pending' AND Sender = " + str(senderID) + " " \
-                                    "AND Reciever = " + str(recID) + " AND length= " + str(length) + " AND " \
-                                    "width= " + str(width) + " AND height = " + str(height) + ";"
-                    cursor.execute(getPackageID)
-                    print("Get Package ID query")
-                    packageIDResults = cursor.fetchone()
-                    print(packageIDResults)
-                    print("successfully inputted data into the database")
-
-                    orderInfo = {
-                        "send_fname": send_fname,
-                        "send_lname": send_lname,
-                        "rec_fname": rec_fname,
-                        "rec_lname": rec_lname,
-                        "send_email": send_email,
-                        "send_phoneNum": send_phoneNum,
-                        "rec_email": rec_email,
-                        "rec_phoneNum": rec_phoneNum,
-                        "return_add": return_add,
-                        "dest_add": destAddress,
-                        "weight": weight,
-                        "width": width,
-                        "height": height,
-                        "length": length,
-                        "checkboxes": checkboxes,
-                        "delivery": delivery,
-                        "branch_id": branchID,
-                        "fragile": fragile,
-                        "insurance": insurance,
-                        "pkgID": packageIDResults[0],
-                        "price": price,
-                        "empID": employeeID
-                    }
-                    trackQ = """INSERT INTO tracking(current_office_num, arrival, Package_ID, employee)
-                             VALUES(""" + str(branchID) + ", NOW()," + str(orderInfo['pkgID']) + ", " + str(employeeID) + ');'
-
-                    cursor.execute(trackQ)
-                    connection.commit()
-
-        except Error as e:
-            print(e)
-
-        # return render_template(url_for("ConfirmationPage.html", priceDisp = price))
-        # TODO: use confirmationPage here using url_for
-
-
-
-        return render_template("ConfirmationPage.html", info=orderInfo)
+    # if request.method == "POST":
+    #     send_fname = request.form.get("s_fname")
+    #     send_lname = request.form.get("s_lname")
+    #     rec_fname = request.form.get("r_fname")
+    #     rec_lname = request.form.get("r_lname")
+    #     send_email = request.form.get("s_email")
+    #     send_phoneNum = request.form.get("s_phoneNum")
+    #     rec_email = request.form.get("r_email")
+    #     rec_phoneNum = request.form.get("r_phoneNum")
+    #     return_add = request.form.get("custAdd")
+    #     destAddress = request.form.get("destAdd")
+    #     weight = int(request.form.get("weight"))
+    #     width = int(request.form.get("width"))
+    #     height = int(request.form.get("height"))
+    #     length = int(request.form.get("length"))
+    #     checkboxes = request.form.getlist("etc")
+    #     delivery = int(request.form.get("delivery"))
+    #     employeeID = request.form.get("employeeID")
+    #     fragile = 0
+    #     insurance = 1
+    #     for checks in checkboxes:
+    #         if checks == '20':
+    #             fragile = 1
+    #         elif checks == '30':
+    #             insurance = 1.2
+    #
+    #     price = ((width * height * length) * weight) * .01 * insurance * delivery
+    #     price = ("%.2f" % price)
+    #     print(price)
+    #     # add a redirect to bring the user to a page where it shows that your package is being sent
+    #     # and what the cost of the package is.
+    #     # return redirect(url_for('packTracker'))
+    #
+    #     try:
+    #         with connect(
+    #                 host=host,
+    #                 user=user,
+    #                 password=password,
+    #                 database=database
+    #         ) as connection:
+    #             print(connection)
+    #
+    #             # Need to make a query to the DB and check to see if there is matching values
+    #             # for the sending customer or the receiving customer
+    #             # If there isn't a record of the receiving customer:
+    #             # Create a new customer
+    #             # If there isn't a record of the sending customer:
+    #             # Create a new customer
+    #             # If there isn't a record of both:
+    #             # Create two new customers
+    #             # Else skip creating customers
+    #
+    #             # Take the customer information (in particular the customer ID) that was either created or queried,
+    #             # and create a new package entry for the database.
+    #             # Make sure that we have the receiving customer's customerID
+    #             # and sender's customerID to add to the package entry.
+    #             # insert_package = "INSERT INTO package VALUES (1001,'p',0,8,100,1,'pending',now(),007,1,00.00);"
+    #             show_change = "select * from customer;"
+    #             # show_package = "select * from package;"
+    #
+    #             with connection.cursor(buffered=True) as cursor:
+    #                 # query to get the branchID based off the employeeID inserting it.
+    #                 branchQ = """SELECT office_num
+    #                                              FROM employee
+    #                                              WHERE Emp_ID = """ + employeeID + ';'
+    #                 cursor.execute(branchQ)
+    #                 branchResult = cursor.fetchone()
+    #                 if branchResult is None:
+    #                     flash("Employee ID is invalid")
+    #                     return redirect(url_for('views.packDelivery'))
+    #                 branchID = branchResult[0]
+    #                 s_query = "SELECT Cust_ID FROM customer WHERE Fname = '" + send_fname + "' AND lname = '" + send_lname + "' AND email = '" + send_email + "' AND phone_no = '" + send_phoneNum + "' AND address = '" + return_add + "';"
+    #
+    #                 r_query = "SELECT Cust_ID FROM customer WHERE Fname = '" + rec_fname + "' AND lname = '" + rec_lname + "' AND email = '" + rec_email + "' AND phone_no = '" + rec_phoneNum + "' AND address = '" + destAddress + "';"
+    #                 cursor.execute(s_query) # returns none or what the db has for this customer
+    #                 senderResult = cursor.fetchone()
+    #
+    #                 if senderResult is None:
+    #                     print("Sender query")
+    #                     # no results, insert into customer table
+    #                     # call cursor.execute again and get temp[0] as the sender ID
+    #                     insert_customer = "INSERT INTO customer (fname, lname, email, phone_no, address, date_joined) VALUES ('" \
+    #                                       + send_fname + "','" + send_lname + "','" + send_email + "','" + send_phoneNum \
+    #                                       + "','" + return_add + "', now() );"
+    #                     cursor.execute(insert_customer)
+    #                     connection.commit()
+    #                     print("In between insert_customer and s_query")
+    #                     cursor.execute(s_query)
+    #                     senderResult = cursor.fetchone() # returns result of the senders newly inserted info
+    #                     print("Sender Result")
+    #                     print(senderResult)
+    #
+    #
+    #                 senderID = senderResult[0]
+    #
+    #                 cursor.execute(r_query)
+    #                 receiverResult = cursor.fetchone() # returns none or what the db has for this customer
+    #                 if receiverResult == None:
+    #                     print("\nReceiver query")
+    #                     # no results, insert into customer table
+    #                     # call cursor.execute again and get temp[0] as the sender ID
+    #                     insert_customer = "INSERT INTO customer (fname, lname, email, phone_no, address, date_joined) VALUES ('" \
+    #                                       + rec_fname + "','" + rec_lname + "','" + rec_email + "','" + rec_phoneNum \
+    #                                       + "','" + destAddress + "', now() );"
+    #                     cursor.execute(insert_customer)
+    #                     connection.commit()
+    #                     cursor.execute(r_query)
+    #                     receiverResult = cursor.fetchone() # returns result of the senders newly inserted info
+    #                     print("Receiver Result ======== ")
+    #                     print(receiverResult)
+    #
+    #                 recID = receiverResult[0]
+    #
+    #                 insert_package = "INSERT INTO package(P_type, isFragile, weight, " \
+    #                                  "insurance, status, Sender, Reciever, length, width, height)"
+    #
+    #                 if delivery == 1:
+    #                     if insurance == 1:
+    #                         insert_package += " VALUES('s'" \
+    #                                           ", " + str(fragile) + " , " + str(weight) + ", 0, " \
+    #                                                                                       "'pending', " + str(
+    #                             senderID) + " , " + str(recID) + ", " \
+    #                                                              " " + str(length) + ", " + str(width) + ", " + str(
+    #                             height) + ");"
+    #                         priority = 's'
+    #                         insurance1 = 0
+    #
+    #                     else:
+    #                         priority = 's'
+    #                         insurance1 = 1
+    #                         insert_package += " VALUES('s'" \
+    #                                           ", " + str(fragile) + " , " + str(weight) + ", 1, " \
+    #                                                                                       "'pending', " + str(
+    #                             senderID) + " , " + str(recID) + ", " \
+    #                                                              " " + str(length) + ", " + str(width) + ", " + str(
+    #                             height) + ");"
+    #
+    #                 else:
+    #                     if (insurance == 1):
+    #                         priority = 'p'
+    #                         insurance1 = 0
+    #                         insert_package += " VALUES('p', " + str(fragile) + " , " + str(weight) + ", 0, 'pending" \
+    #                                           "', " + str(senderID) + " , " + str(recID) + ",  " + str(length) + ", " + str(width) + ", " + str(height) + ");"
+    #                     else:
+    #                         priority = 'p'
+    #                         insurance1 = 1
+    #                         insert_package += " VALUES('p', " + str(fragile) + " , " + str(weight) + ", 1, 'pending', " \
+    #                                           "" + str(senderID) + " , " + str(recID) + ", " + str(length) + ", " + str(width) + ", " + str(height) + ");"
+    #
+    #
+    #                 cursor.execute(insert_package)
+    #                 print("Insert Package query")
+    #                 connection.commit()
+    #
+    #                 getPackageID = "SELECT package.ID FROM package " \
+    #                                "WHERE P_type = '" + priority + "' AND isFragile = " + str(fragile) + "" \
+    #                                " AND weight = " + str(weight) + " AND insurance = " + str(insurance1) + " AND " \
+    #                                "status = 'pending' AND Sender = " + str(senderID) + " " \
+    #                                 "AND Reciever = " + str(recID) + " AND length= " + str(length) + " AND " \
+    #                                 "width= " + str(width) + " AND height = " + str(height) + ";"
+    #                 cursor.execute(getPackageID)
+    #                 print("Get Package ID query")
+    #                 packageIDResults = cursor.fetchone()
+    #                 print(packageIDResults)
+    #                 print("successfully inputted data into the database")
+    #
+    #                 orderInfo = {
+    #                     "send_fname": send_fname,
+    #                     "send_lname": send_lname,
+    #                     "rec_fname": rec_fname,
+    #                     "rec_lname": rec_lname,
+    #                     "send_email": send_email,
+    #                     "send_phoneNum": send_phoneNum,
+    #                     "rec_email": rec_email,
+    #                     "rec_phoneNum": rec_phoneNum,
+    #                     "return_add": return_add,
+    #                     "dest_add": destAddress,
+    #                     "weight": weight,
+    #                     "width": width,
+    #                     "height": height,
+    #                     "length": length,
+    #                     "checkboxes": checkboxes,
+    #                     "delivery": delivery,
+    #                     "branch_id": branchID,
+    #                     "fragile": fragile,
+    #                     "insurance": insurance,
+    #                     "pkgID": packageIDResults[0],
+    #                     "price": price,
+    #                     "empID": employeeID
+    #                 }
+    #                 trackQ = """INSERT INTO tracking(current_office_num, arrival, Package_ID, employee)
+    #                          VALUES(""" + str(branchID) + ", NOW()," + str(orderInfo['pkgID']) + ", " + str(employeeID) + ');'
+    #
+    #                 cursor.execute(trackQ)
+    #                 connection.commit()
+    #
+    #     except Error as e:
+    #         print(e)
+    #
+    #     # return render_template(url_for("ConfirmationPage.html", priceDisp = price))
+    #     # TODO: use confirmationPage here using url_for
+    #
+    #
+    #
+    #     return render_template("ConfirmationPage.html", info=orderInfo)
 
     return render_template("KEEPfuelQuoteForm.html")
 
@@ -566,7 +571,6 @@ def CalcProcess():
         newdist = dist.query_postal_code("77204", zipcode)
         cost = 10 * int(gallons)
         totalcost = int(cost + (newdist * 7))
-
         cost = "$" + str(cost)
         totalcost = "$" + str(totalcost)
 
