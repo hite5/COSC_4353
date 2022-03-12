@@ -51,19 +51,15 @@ DROP TABLE IF EXISTS `quotes`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `quotes` (
   `quote_id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `users_user_id` int(10) unsigned zerofill NOT NULL,
-  `item_id` int(10) unsigned zerofill NOT NULL,
+  `email` varchar(45) NOT NULL COMMENT 'used to reference user for quote',
+  `dest` varchar(45) NOT NULL COMMENT 'means destination address',
   `quantity` int NOT NULL,
   `shipping` varchar(45) NOT NULL,
   `tax` varchar(45) NOT NULL,
   `total` varchar(45) NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`quote_id`,`users_user_id`,`item_id`),
-  UNIQUE KEY `idquotes_UNIQUE` (`quote_id`),
-  KEY `fk_quotes_users_idx` (`users_user_id`),
-  KEY `fk_quotes_inventory1_idx` (`item_id`),
-  CONSTRAINT `fk_quotes_inventory1` FOREIGN KEY (`item_id`) REFERENCES `inventory` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_quotes_users` FOREIGN KEY (`users_user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`quote_id`),
+  UNIQUE KEY `idquotes_UNIQUE` (`quote_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -95,7 +91,7 @@ CREATE TABLE `users` (
   `zip` int DEFAULT NULL,
   `password` varchar(45) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -104,6 +100,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (0000000001,'mike','jones','mj@mail.com',NULL,NULL,NULL,NULL,NULL,'password'),(0000000002,'mike','jones','who@mail.com',NULL,NULL,NULL,NULL,NULL,'password'),(0000000003,'yung','thug','thugger@mail.com',1231231234,NULL,NULL,NULL,NULL,'password'),(0000000004,'a','b','a@mail.com',1231231234,'123 abc',NULL,NULL,NULL,'password'),(0000000005,'b','c','b@mail.com',1231231234,'123 abc','city',NULL,NULL,'password'),(0000000006,'mike','mike','mike@mail.com',1231231234,'123 place','City','AL',12312,'password'),(0000000007,'mister','bean','mb@mail.com',1231231234,'123 place','city','KY',12312,'password'),(0000000008,'homie','g','homie@mail.com',1231231231,'new new swag swag','swagyolo','KY',0,'password');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,4 +121,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-09 18:34:41
+-- Dump completed on 2022-03-12 14:01:22
