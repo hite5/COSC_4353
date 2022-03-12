@@ -91,20 +91,16 @@
         Orders <i class="fa fa-caret-down"></i>
       </a>
       <div id="demoAcc" class="w3-bar-block w3-show w3-padding-large w3-medium">
-        <a href="/NewPackage" class="w3-bar-item w3-button">New Order</a>
+        <a href="/NewOrder" class="w3-bar-item w3-button">New Order</a>
         <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
-<!--        <a href="{{ url_for('views.packageUpdateForm') }}" class="w3-bar-item w3-button">Manage Order</a>-->
-<!--        <a href="/packageSearch" class="w3-bar-item w3-button">Search Order</a>-->
       </div>
-<!--      <a href="/customerSearch" class="w3-bar-item w3-button">Search Customer</a>-->
-<!--      <a href="/editCustomerSearch" class="w3-bar-item w3-button">Edit Customer</a>-->
-      <a href="/EditEmployee" class="w3-bar-item w3-button">Edit Account</a>
+
+      <a href="/EditProfile" class="w3-bar-item w3-button">Edit Account</a>
       <a href="/report" class="w3-bar-item w3-button">Order Reports</a>
 
       {% endif %}
       {% if current_user.type == 'supervisor' %} <!-- Supervisors Only -->
-<!--      <a href="/NewEmployeeForm" class="w3-bar-item w3-button">Add New Account</a>-->
-<!--      <a href="/employeeSearch" class="w3-bar-item w3-button">Search Employee</a>-->
+
       {% endif %}
       {% if not current_user.is_authenticated %} <!-- Not Logged In -->
       <a href="/emp_login" class="w3-bar-item w3-button">Customer Login</a>

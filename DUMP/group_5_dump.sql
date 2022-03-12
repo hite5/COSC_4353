@@ -58,6 +58,7 @@ CREATE TABLE `quotes` (
   `tax` varchar(45) NOT NULL,
   `total` varchar(45) NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `zip` int NOT NULL COMMENT 'ZIP CODE',
   PRIMARY KEY (`quote_id`),
   UNIQUE KEY `idquotes_UNIQUE` (`quote_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -121,4 +122,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-12 14:01:22
+-- Dump completed on 2022-03-12 14:36:18
