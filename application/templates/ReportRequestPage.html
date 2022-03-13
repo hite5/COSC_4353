@@ -205,15 +205,7 @@
 
 
     <div class="main-block">
-        <h1>Report Request Page</h1>
-        <div class="topnav">
-            <a class="active " href="{{ url_for('views.index') }}">
-                Home
-            </a>
-            <a href="{{ url_for('auth.logout') }}">
-                Logout
-            </a>
-        </div>
+        <h1>Quote Report Page</h1>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <div class="notification is-danger">
@@ -223,14 +215,15 @@
         {% endwith %}
 
         <form action="" method="post">
-            <h3>Select Report Type</h3>
+            <h3>Select Customer</h3>
 
             <div class="Report">
-                <select name="reportType" required>
-                    <option value="number" disabled selected>Report Type</option>
-                    <option value="pkg">Total Deliveries</option>
-                    <option value="customers">New Registrations</option>
-                    <option value="employee">New Hires</option>
+                <select name="customer" required>
+                    <option value="number" disabled selected>Customer</option>
+                    <option value="Chevron">Chevron</option>
+                    <option value="Shell">Shell</option>
+                    <option value="Exxon">Exxon</option>
+                    <option value="711">711</option>
                 </select>
             </div>
 

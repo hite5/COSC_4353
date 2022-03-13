@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <head>
     <title>Report Output Page</title>
     <style>
@@ -211,12 +210,10 @@
                 header, data (2d array) -->
 
         <br><br>
-        {{ report }} in {{ date_start }} to {{ date_end }}: {{ num_items }}
+        {{ report }} in {{ date_start }} to {{ date_end }}: {{ num_items }} quotes in report
 
-        {% if report == "Total Deliveries" %}
         <br>
-        Total Profit: {{ profit }}
-        {% endif %}
+        <b>Net Revenue: ${{ revenue }}</b>
 
         <br><br>
 
@@ -234,7 +231,7 @@
             {% for row in data %}
             <tr>
                 {% for cell in row %}
-                <td>{{cell}}</td>
+                <td>{{row[cell]}}</td>
                 {% endfor %}
             </tr>
             {% endfor %}
