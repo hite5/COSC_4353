@@ -31,115 +31,6 @@ def loggedIn():
     return render_template("KEEPhomePage.html", name=current_user.name.capitalize(),
                            type=current_user.type.capitalize())
 
-@views.route('/packageTracker')
-def packTracker():
-    return render_template("KEEPorderTracker.html")
-
-
-@views.route('/packageTracker', methods=['POST'])
-def tracking():
-    packageID = request.form.get("trackID")
-    try:
-        with connect(
-                host=host,
-                user=user,
-                password=password,
-                database=database
-        ) as connection:
-            print(connection)
-            cursor = connection.cursor(buffered=True)
-
-            track = "SELECT current_office_num AS `Office Number`, departure, arrival FROM tracking WHERE " \
-                    "Package_ID = " + packageID + " ORDER BY arrival DESC; "
-
-            package = "SELECT P_type, isFragile, weight, insurance, status, delivered_time, Reciever, price, " \
-                      "length, width, height FROM package WHERE ID = " + packageID + "; "
-
-            branch = ["Houston", "Dallas", "Austin", "San Antonio", "El Paso"]
-
-            cursor.execute(package)
-            result = cursor.fetchone()
-            if result is None:
-                flash('Package does not exist.')
-                return redirect(url_for('views.packTracker'))
-            print(result)
-            pack = {"priority": result[0],
-                    "isFragile": result[1],
-                    "weight": result[2],
-                    "ins": result[3],
-                    "status": result[4],
-                    "delivered": result[5],
-                    "sender": result[6],
-                    "receiver": result[6],
-                    "price": result[7],
-                    "length": result[8],
-                    "width": result[9],
-                    "height": result[10]
-                    }
-            if pack["isFragile"] == 1:
-                pack['isFragile'] = 'Yes'
-            else:
-                pack['isFragile'] = 'No'
-
-            if pack["priority"] == 'p':
-                pack['priority'] = 'Priority'
-            elif pack["priority"] == 's':
-                pack['priority'] = 'Standard'
-
-            if pack["ins"] == 1:
-                pack['ins'] = "Yes"
-            else:
-                pack['ins'] = "No"
-
-            recID = "SELECT Fname, lname, email, phone_no, address FROM customer WHERE Cust_ID =" + str(
-                pack["receiver"]) + ";"
-            cursor.execute(recID)
-            result = cursor.fetchone()
-
-            recCustomer = {"Name": result[0] + " " + result[1],
-                           "email": result[2],
-                           "phone_no": result[3],
-                           "address": result[4]
-                           }
-
-            trackHistory = []
-            cursor.execute(track)
-            result = cursor.fetchall()
-            for i in range(len(result)):
-                x = result[i][2]
-                y = result[i][1]
-                print(y)
-                if y is None:
-                    trackHistory.append("At " + x.strftime('%c') + " your package arrived at our " + branch[
-                        result[i][0] - 1] + " branch.")
-                else:
-                    trackHistory.append("At " + x.strftime('%c') + " your package arrived at our " + branch[
-                        result[i][0] - 1] + " branch. It left that facility at: " + y.strftime('%c'))
-
-            deliveredTimeQ = f"SELECT delivered_time FROM package WHERE ID = {packageID}"
-
-
-            if pack["status"] == "pending":
-                pack["status"] = "Your package is in transit."
-            elif pack["status"] == "returned":
-                cursor.execute(deliveredTimeQ)
-                result = cursor.fetchone()
-                deliveredDate = result[0].strftime('%x')
-                deliveredTime = result[0].strftime('%X')
-                pack["status"] = "Your package was returned at: " + deliveredDate + " " + deliveredTime
-            else:
-                cursor.execute(deliveredTimeQ)
-                result = cursor.fetchone()
-                deliveredDate = result[0].strftime('%x')
-                deliveredTime = result[0].strftime('%X')
-                pack['status'] = 'Your package was delivered at: ' + deliveredDate + " " + deliveredTime
-
-        return render_template("TrackingLandingPage.html", packID=packageID, trackpack=pack, customer=recCustomer,
-                               history=trackHistory)
-
-    except Error as e:
-        print(e)
-
 
 @views.route('/NewCustomerForm', methods=["GET", "POST"])
 def NewCustomerForm():
@@ -194,7 +85,7 @@ def NewCustomerForm():
 
 
 
-@views.route('/EditProfile', methods=["GET", "POST"])
+@views.route('/EditProfile', methods=["GET", "POST"]) # pragma: no cover
 @login_required
 def EditProfile():
     try:
@@ -266,13 +157,13 @@ def EditProfile():
         return render_template("EditProfile.html", data=0)
 
 
-@views.route('/NewOrder', methods=["GET", "POST"])
+@views.route('/NewOrder', methods=["GET", "POST"]) # pragma: no cover
 @login_required
 def packDelivery():
-    return render_template("KEEPfuelQuoteForm.html")
+  return render_template("KEEPfuelQuoteForm.html")
 
 
-@views.route('/heelo')
+@views.route('/heelo') # pragma: no cover
 def dosomething():
     return render_template("testingAjax.html")
 
@@ -352,144 +243,20 @@ def CalcProcess():
     return jsonify({'error' : 'Missing data!'})
 
 
-@views.route('/Submitted', methods=["GET", "POST"])
-def confirmationPage(pagePrice):
-    return render_template("ConfirmationPage.html", priceDisp=pagePrice)
-
 
 # @views.route('/submitPkgUpdate', methods=["GET","POST"])
 # def submitPkgUpdate()
 #     return render_template("PakageUpdateConfirmation.html")
 
 
-@views.route('/TrackingInfo', methods=["GET", "POST"])
-def trackingInfo(order):
-    return render_template("TrackingLandingPage.html", thisOrder=order)
+@views.route('/report')
+@login_required
+def report():
+    return render_template("ReportRequestPage.html")
 
 
 if __name__ == '_@views__':
     views.run()
-
-
-@views.route('/')
-def index():
-    return render_template('KEEPhomePage.html')
-
-
-@views.route('/packageSearch')
-@login_required
-def packSearch():
-    return render_template("PackageSearch.html")
-
-
-@views.route('/packageSearch', methods=["POST"])
-@login_required
-def packQuery():
-    with connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
-    ) as connection:
-        print(connection)
-        cursor = connection.cursor(buffered=True)
-
-        branchSearch = request.form.get("branchSearch")
-        empSearch = request.form.get("empSearch")
-        pkgSearch = request.form.get("pkgSearch")
-        custSearch = request.form.get("custSearch")
-
-        if branchSearch is not None:
-            print("BranchSearch")
-            bid = request.form.get("bid")
-            if bid is None:
-                flash('Please input data in the desired search field.')
-                return redirect(url_for('views.packSearch'))
-            branchQuery = """SELECT ID, status, Sender, Reciever, price, length, width, height, employee
-                    FROM package, tracking 
-                    WHERE package.ID = Package_ID AND tracking.departure IS NULL AND tracking.current_office_num = """ \
-                          + bid + ";"
-            cursor.execute(branchQuery)
-            result = cursor.fetchall()
-            data = []
-            for row in result:
-                # print(row)
-                data.append(row)
-            headers = ['Package ID', 'Status', 'Sender', 'Receiver', 'Price', 'Length', 'Width', 'Height', 'Employee']
-
-            return render_template("QueryOutput.html", heading=headers, data=data, search_type="Branch ID",
-                                   query=bid)
-
-        elif empSearch is not None:
-            print("EmpSearch")
-            eid = request.form.get("eid")
-            if eid == "":
-                flash('Please input data in the desired search field.')
-                return redirect(url_for('views.packSearch'))
-            empQuery = """SELECT ID, status, Sender, Reciever, price, length, width, height
-                    FROM package, tracking
-                    WHERE package.ID = Package_ID AND tracking.departure IS NULL AND tracking.employee = """ + eid + ';'
-            cursor.execute(empQuery)
-            result = cursor.fetchall()
-            if len(result) == 0:
-                flash("The employee ID does not exist.")
-                return redirect(url_for('views.packSearch'))
-            data = []
-            for row in result:
-                data.append(row)
-            headers = ['Package ID', 'Status', 'Sender', 'Receiver', 'Price', 'Length', 'Width', 'Height']
-
-            return render_template("QueryOutput.html", heading=headers, data=data, search_type="Employee ID",
-                                   query=eid)
-
-        elif pkgSearch is not None:
-            print("pkgSearch")
-            pid = request.form.get("pid")
-            if pid == "":
-                flash('Please input data in the desired search field.')
-                return redirect(url_for('views.packSearch'))
-            pkgQuery = """SELECT P_type, isFragile, weight, insurance, status, Sender, Reciever, price, length, width, 
-            height, Fname, lname
-            FROM package, customer
-            WHERE package.ID = """ + pid + " AND customer.CUST_ID = Reciever; "
-            cursor.execute(pkgQuery)
-            result = cursor.fetchall()
-            if len(result) == 0:
-                flash("Your package ID does not exist.")
-                return redirect(url_for('views.packSearch'))
-            data = []
-            for row in result:
-                data.append(row)
-            headers = ['Priority', 'Fragile', 'Weight', 'Insurance', 'Status', 'Sender', 'Reciever', 'Price', 'Length',
-                       'Width', "Height", 'Receiver\'s First Name', 'Receiver\'s Last Name']
-
-            return render_template("QueryOutput.html", heading=headers, data=data, search_type="Package ID",
-                                   query=pid)
-
-
-        elif custSearch is not None:
-            print("custSearch")
-            cid = request.form.get("cid")
-            if cid == "":
-                flash('Please input data in the desired search field.')
-                return redirect(url_for('views.packSearch'))
-            custQuery = """SELECT ID, status, Sender, Reciever, price, length, width, height
-                    FROM package
-                    WHERE Sender = """ + cid + " OR Reciever = " + cid + ";"
-            cursor.execute(custQuery)
-            result = cursor.fetchall()
-            if len(result) == 0:
-                flash("The customer you inputted doesn't exist or doesn't have any active packages.")
-                return redirect(url_for('views.packSearch'))
-            data = []
-            for row in result:
-                data.append(row)
-            headers = ['Package ID', 'Status', 'Sender', 'Receiver', 'Price', 'Length', 'Width', 'Height']
-
-            return render_template("QueryOutput.html", heading=headers, data=data, search_type="Customer ID",
-                                   query=cid)
-        else:
-            return "Error."
 
 @views.route('/report')
 @login_required
@@ -539,8 +306,12 @@ def outputReport():
     #     print(connection)
     #     cursor = connection.cursor(buffered=True)
 
+@views.route('/')
+def index():
+    return render_template('KEEPhomePage.html')
+
 # Change Password
-@views.route('/changePassword', methods=['GET','POST'])
+@views.route('/changePassword', methods=['GET','POST']) # pragma: no cover
 @login_required
 def changePassword():
     if request.method == 'POST':

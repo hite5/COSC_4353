@@ -51,17 +51,17 @@ DROP TABLE IF EXISTS `quotes`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `quotes` (
   `quote_id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
-  `email` varchar(45) NOT NULL COMMENT 'used to reference user for quote',
-  `dest` varchar(45) NOT NULL COMMENT 'means destination address',
-  `quantity` int NOT NULL,
-  `shipping` varchar(45) NOT NULL,
-  `tax` varchar(45) NOT NULL,
-  `total` varchar(45) NOT NULL,
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `zip` int NOT NULL COMMENT 'ZIP CODE',
+  `email` varchar(45) DEFAULT NULL COMMENT 'used to reference user for quote',
+  `dest` varchar(45) DEFAULT NULL COMMENT 'means destination address',
+  `quantity` int DEFAULT NULL,
+  `shipping` varchar(45) DEFAULT NULL,
+  `tax` varchar(45) DEFAULT NULL,
+  `total` varchar(45) DEFAULT NULL,
+  `date` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `zip` int DEFAULT NULL COMMENT 'ZIP CODE',
   PRIMARY KEY (`quote_id`),
   UNIQUE KEY `idquotes_UNIQUE` (`quote_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,6 +70,7 @@ CREATE TABLE `quotes` (
 
 LOCK TABLES `quotes` WRITE;
 /*!40000 ALTER TABLE `quotes` DISABLE KEYS */;
+INSERT INTO `quotes` VALUES (0000000001,'homie@mail.com','123 place',430,NULL,NULL,'$4665','2022-03-12 19:38:59',77388),(0000000002,'homie@mail.com','123 place',420,'1','1','$4557','2022-03-13 13:15:27',77388);
 /*!40000 ALTER TABLE `quotes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,14 +86,14 @@ CREATE TABLE `users` (
   `first_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
-  `phone` int DEFAULT NULL,
+  `phone` varchar(10) DEFAULT NULL,
   `address` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
   `state` varchar(2) DEFAULT NULL,
   `zip` int DEFAULT NULL,
-  `password` varchar(45) NOT NULL,
+  `password` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +102,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (0000000001,'mike','jones','mj@mail.com',NULL,NULL,NULL,NULL,NULL,'password'),(0000000002,'mike','jones','who@mail.com',NULL,NULL,NULL,NULL,NULL,'password'),(0000000003,'yung','thug','thugger@mail.com',1231231234,NULL,NULL,NULL,NULL,'password'),(0000000004,'a','b','a@mail.com',1231231234,'123 abc',NULL,NULL,NULL,'password'),(0000000005,'b','c','b@mail.com',1231231234,'123 abc','city',NULL,NULL,'password'),(0000000006,'mike','mike','mike@mail.com',1231231234,'123 place','City','AL',12312,'password'),(0000000007,'mister','bean','mb@mail.com',1231231234,'123 place','city','KY',12312,'password'),(0000000008,'homie','g','homie@mail.com',1231231231,'new new swag swag','swagyolo','KY',0,'password');
+INSERT INTO `users` VALUES (0000000001,'mike','jones','mj@mail.com',NULL,NULL,NULL,NULL,NULL,'password'),(0000000002,'mike','jones','who@mail.com',NULL,NULL,NULL,NULL,NULL,'password'),(0000000003,'yung','thug','litty@mail.com','9999999999','9999999999999','9999999','KY',99999,'password'),(0000000004,'a','b','a@mail.com','1231231234','123 abc',NULL,NULL,NULL,'password'),(0000000005,'b','c','b@mail.com','1231231234','123 abc','city',NULL,NULL,'password'),(0000000006,'mike','mike','mike@mail.com','1231231234','123 place','City','AL',12312,'password'),(0000000007,'mister','bean','mb@mail.com','1231231234','123 place','city','KY',12312,'password'),(0000000008,'homie','gg','homie@mail.com','1010101010','101010101010','101010101010101010101','WY',10010,'password'),(0000000009,'jim','tim','swag@swaggerson.com','1234567891','swagstreet','swagcity','TX',12345,'ayoayoaoyaoy');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,4 +123,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-12 14:36:18
+-- Dump completed on 2022-03-13 15:51:36
