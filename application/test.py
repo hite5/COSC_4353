@@ -46,6 +46,12 @@ class FlaskTest(unittest.TestCase):
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)
 
+    def test_index7(self): #test login
+        tester = app.test_client(self)
+        response = tester.post('/emp_login', data=dict(email='swag@swaggerson.com', password='ayoayoaoyaoy', remember='True'))
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 302)
+
 
     # #FAILED DUE TO OVERLOADING ROUTES (ONE HAS POST)
     # def test_index3(self):  # load signup page
