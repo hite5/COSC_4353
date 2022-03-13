@@ -515,7 +515,7 @@ def SubmitQuoteForm():
                 totalcost = "$" + str(totalcost)
 
                 with connection.cursor(buffered=True) as cursor:
-                    trackQ = "INSERT INTO quotes(email, dest, quantity, total, date, zip) VALUES('" + str(current_user.email) + "', '" + str(dest) + "', '" + str(gallons) + "', '" + str(totalcost) + "', " + "NOW() ,'" + str(zipcode) + "');"
+                    trackQ = "INSERT INTO quotes(email, dest, quantity, shipping, tax, total, date, zip) VALUES('" + str(current_user.email) + "', '" + str(dest) + "', '" + str(gallons) + "', '1', '1', '" + str(totalcost) + "', " + "NOW() ,'" + str(zipcode) + "');"
                     cursor.execute(trackQ)
 
 
