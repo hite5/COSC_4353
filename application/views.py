@@ -252,6 +252,12 @@ def CalcProcess():
 #     return render_template("PakageUpdateConfirmation.html")
 
 
+@views.route('/report')
+@login_required
+def report():
+    return render_template("ReportRequestPage.html")
+
+
 if __name__ == '_@views__':
     views.run()
 

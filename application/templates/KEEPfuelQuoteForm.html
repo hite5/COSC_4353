@@ -266,14 +266,11 @@
       </a>
       <div id="demoAcc" class="w3-bar-block w3-show w3-padding-large w3-medium">
         <a href="/NewOrder" class="w3-bar-item w3-button">New Order</a>
-        <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
       </div>
       <a href="/EditProfile" class="w3-bar-item w3-button">Edit Account</a>
       <a href="/report" class="w3-bar-item w3-button">Order Reports</a>
+      {% endif %}
 
-      {% endif %}
-      {% if current_user.type == 'supervisor' %} <!-- Supervisors Only -->
-      {% endif %}
       {% if not current_user.is_authenticated %} <!-- Not Logged In -->
       <a href="/emp_login" class="w3-bar-item w3-button">Customer Login</a>
       <a href="/packageTracker" class="w3-bar-item w3-button">Track Order</a>
