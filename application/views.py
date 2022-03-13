@@ -14,7 +14,7 @@ views = Blueprint('views', __name__)
 
 host = "localhost"
 user = "root"
-password = "C0ug@rs!"
+password = ""
 database = "group_5_db"
 
 # Home Page | Work on redirecting to different pages
@@ -247,16 +247,6 @@ def CalcProcess():
 # @views.route('/submitPkgUpdate', methods=["GET","POST"])
 # def submitPkgUpdate()
 #     return render_template("PakageUpdateConfirmation.html")
-
-
-@views.route('/report')
-@login_required
-def report():
-    return render_template("ReportRequestPage.html")
-
-
-if __name__ == '_@views__':
-    views.run()
 
 @views.route('/report')
 @login_required
