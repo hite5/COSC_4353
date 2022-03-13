@@ -492,6 +492,54 @@ def dosomething():
 #
 #     return jsonify({'error' : 'Missing data!'})
 
+@views.route('/submitFormToDB', methods=['POST'])
+def SubmitQuoteForm():
+    dest = request.form['dest']
+    zipcode = request.form['zipcode']
+    gallons = request.form['gallons']
+    try:
+        with connect(
+                host=host,
+                user=user,
+                password=password,
+                database=database
+        ) as connection:
+            print(connection)
+            #doing something
+            if zipcode and gallons:
+                #dist = pgeocode.GeoDistance('US')
+                #newdist = dist.query_postal_code("77204", zipcode)
+                cost = 10 * int(gallons)
+                totalcost = int(cost + (float(cost)*0.085))
+                #cost = "$" + str(cost)
+                totalcost = "$" + str(totalcost)
+
+                with connection.cursor(buffered=True) as cursor:
+                    trackQ = "INSERT INTO quotes(email, dest, quantity, total, date, zip) VALUES('" + str(current_user.email) + "', '" + str(dest) + "', '" + str(gallons) + "', '" + str(totalcost) + "', " + "NOW() ,'" + str(zipcode) + "');"
+                    cursor.execute(trackQ)
+
+
+                    # query = f"SELECT quote_id FROM quotes WHERE email = '{current_user.email}'"
+                    # cursor.execute(query)
+                    # result = cursor.fetchone()
+                    # data = {"quoteid" : result[0]}
+                    # print(data)
+
+
+                    connection.commit()
+                    return jsonify({'success': 'didit!'})
+
+
+            return jsonify({'error': 'Missing data!'})
+
+
+    except Error as e:
+        print(e)
+
+
+
+
+
 
 @views.route('/quoteCalc', methods=['POST'])
 def CalcProcess():
@@ -499,10 +547,11 @@ def CalcProcess():
     gallons = request.form['gallons']
 
     if zipcode and gallons:
-        dist = pgeocode.GeoDistance('US')
-        newdist = dist.query_postal_code("77204", zipcode)
+        #dist = pgeocode.GeoDistance('US')
+        #newdist = dist.query_postal_code("77204", zipcode)
         cost = 10 * int(gallons)
-        totalcost = int(cost + (newdist * 7))
+        #totalcost = int(cost + (newdist * 7))
+        totalcost = int(cost + (float(cost) * 0.085))
         cost = "$" + str(cost)
         totalcost = "$" + str(totalcost)
 

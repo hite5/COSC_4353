@@ -208,6 +208,45 @@
         }
       })
     });
+</script>
+
+<script type="text/javascript">
+      $(document).on('reset','#calculator',function(e)
+                   {
+      console.log('SUBMITTING');
+      e.preventDefault();
+      $.ajax({
+        data : {
+            dest : $('#dest').val(),
+            zipcode : $('#zipcode').val(),
+            gallons : $('#gallons').val()
+        },
+        type:'POST',
+        url:'/submitFormToDB',
+        success:function(data)
+        {
+          console.log("getting somewhere 2")
+            if (data.success) {
+
+               $('#calculator').hide();
+                $('#success').show();
+                $('#quoteID').text(data.quoteID);
+
+
+            }
+            else {
+                $('#cost').text("$0 ERROR");
+                $('#totalcost').text("$0");
+
+            }
+        }
+      })
+    });
+
+
+
+
+
     </script>
 
 
@@ -260,44 +299,6 @@
                     </div>
                 {% endif %}
             {% endwith %}
-		<form action="{{ url_for("views.packDelivery")}}" method="post">
-			<div class="info">
-				<input class="fname" type="text" name="s_fname" placeholder="Client name" maxlength = "15" required/>
-<!--                <input class="fname" type="text" name="s_lname" placeholder="Sender's Last name" maxlength = "15" required/>-->
-<!--                <input class="fname" type="text" name="r_fname" placeholder="Receiver's First name" maxlength = "15" required/>-->
-<!--                <input class="fname" type="text" name="r_lname" placeholder="Receiver's Last name" maxlength = "15" required/>-->
-                <input class="fname" type="text" name="s_email" placeholder="Email" maxlength = "30" required/>
-                <input class="fname" type="text" name="destAdd" placeholder="Address" maxlength = "50" required/>
-
-                <input type="text" pattern="\d*" name="s_phoneNum" placeholder="Gallons Requested" maxlength = "10" minlength = "10" required/>
-
-<!--                <input type="text" name="r_email" placeholder="Receiver's Email" maxlength = "30" required/>-->
-<!--                <input type="text" pattern="\d*" name="r_phoneNum" placeholder="Receiver's Phone number" maxlength = "10" minlength = "10" required/>-->
-<!--                <input type="text" name="destAdd" placeholder="Destination Address" maxlength = "30" required/>-->
-<!--                <input type="text" name="custAdd" placeholder="Return Address" maxlength = "30" required/>-->
-<!--                <input type="text" pattern="\d*" name="weight" placeholder="Weight" maxlength = "3" required/>-->
-
-
-<!--                <div class="metod">-->
-<!--                    <div>-->
-<!--                        <input type="text" pattern="\d*" name="height" placeholder="Height" maxlength = "3" required/>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <input type="text" pattern="\d*" name="length" placeholder="Length" maxlength = "3" required/>-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                        <input type="text" pattern="\d*" name="width" placeholder="Width" maxlength = "3" required/>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <input type="text" pattern="\d*" name="employeeID" placeholder="Employee ID" maxlength = "10" required/>-->
-
-
-
-            </div>
-        <label>
-                <H3>Enter Date to Deliver <br>Note: Dates under a week period will result in higher costs</H3>
-                <input type="date" name="Delivery Date" maxlength = "10" required>
-        </label>
 <!--        <h3>Delivery Method & Options</h3>-->
 <!--        <div class="metod">-->
 
@@ -322,16 +323,17 @@
 
 
 
-        <button href="/" class="button">Continue</button>
 
-        </form>
 
         <form method = "post" id = "calculator">
-
-
-            <input type="text" pattern="\d*" id="gallons" name="gallons" placeholder="Gallons Requested" maxlength = "10" minlength = "1" required/>
+            <input class="fname" type="text" id="dest" name="dest" placeholder="Address" maxlength = "50" required/>
             <input type="text" pattern="\d*" id="zipcode" name="zip" placeholder="ZIP CODE" maxlength = "5" minlength = "5" required/>
+            <input type="text" pattern="\d*" id="gallons" name="gallons" placeholder="Gallons Requested" maxlength = "10" minlength = "1" required/>
 
+            <label>
+                <H3>Enter Date to Deliver <br>Note: Dates under a week period will result in higher costs</H3>
+                <input type="date" name="Delivery Date" maxlength = "10" required>
+            </label>
 
             <H3><br>Suggested Price (Without shipping costs)<br></H3>
             <H2 id = cost>$0</H2>
@@ -340,8 +342,16 @@
             <div>
                 <button type="submit" class="button">Calculate Costs</button>
             </div>
+            <div>
+                <button type="reset" class="button">Continue</button>
+            </div>
+
 
         </form>
+        <div id = success style="display:none;">
+            <H3>FORM SUBMITTED<br></H3>
+            <H3 id = quoteID></H3>
+        </div>
 
     </div>
     </div>
