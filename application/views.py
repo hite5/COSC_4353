@@ -327,7 +327,7 @@ def changePassword():
             ) as connection:
                 print(connection)
 
-                update_password = f"UPDATE employee SET Emp_pwd = AES_ENCRYPT('{newPass}', '432A462D4A614E635266556A586E3272') WHERE email = '{current_user.email}';"
+                update_password = f"UPDATE users SET password = AES_ENCRYPT('{newPass}', '432A462D4A614E635266556A586E3272') WHERE email = '{current_user.email}';"
 
                 with connection.cursor(buffered=True) as cursor:
                     cursor.execute(update_password)

@@ -61,7 +61,7 @@ CREATE TABLE `quotes` (
   `zip` int DEFAULT NULL COMMENT 'ZIP CODE',
   PRIMARY KEY (`quote_id`),
   UNIQUE KEY `idquotes_UNIQUE` (`quote_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +70,7 @@ CREATE TABLE `quotes` (
 
 LOCK TABLES `quotes` WRITE;
 /*!40000 ALTER TABLE `quotes` DISABLE KEYS */;
-INSERT INTO `quotes` VALUES (0000000001,'homie@mail.com','123 place',430,NULL,NULL,'$4665','2022-03-12 19:38:59',77388),(0000000002,'homie@mail.com','123 place',420,'1','1','$4557','2022-03-13 13:15:27',77388);
+INSERT INTO `quotes` VALUES (0000000001,'homie@mail.com','123 place',430,NULL,NULL,'$4665','2022-03-12 19:38:59',77388),(0000000002,'homie@mail.com','123 place',420,'1','1','$4557','2022-03-13 13:15:27',77388),(0000000003,'homie@mail.com','220200 asdfasdf',420,'1','1','$4557','2022-03-13 19:13:54',77388);
 /*!40000 ALTER TABLE `quotes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,9 +91,9 @@ CREATE TABLE `users` (
   `city` varchar(45) DEFAULT NULL,
   `state` varchar(2) DEFAULT NULL,
   `zip` int DEFAULT NULL,
-  `password` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` longblob NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +102,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (0000000001,'mike','jones','mj@mail.com',NULL,NULL,NULL,NULL,NULL,'password'),(0000000002,'mike','jones','who@mail.com',NULL,NULL,NULL,NULL,NULL,'password'),(0000000003,'yung','thug','litty@mail.com','9999999999','9999999999999','9999999','KY',99999,'password'),(0000000004,'a','b','a@mail.com','1231231234','123 abc',NULL,NULL,NULL,'password'),(0000000005,'b','c','b@mail.com','1231231234','123 abc','city',NULL,NULL,'password'),(0000000006,'mike','mike','mike@mail.com','1231231234','123 place','City','AL',12312,'password'),(0000000007,'mister','bean','mb@mail.com','1231231234','123 place','city','KY',12312,'password'),(0000000008,'homie','gg','homie@mail.com','1010101010','101010101010','101010101010101010101','WY',10010,'password'),(0000000009,'jim','tim','swag@swaggerson.com','1234567891','swagstreet','swagcity','TX',12345,'ayoayoaoyaoy');
+INSERT INTO `users` VALUES (0000000001,'mike','jones','mj@mail.com',NULL,NULL,NULL,NULL,NULL,_binary 'password'),(0000000002,'mike','jones','who@mail.com',NULL,NULL,NULL,NULL,NULL,_binary 'password'),(0000000003,'yung','thug','thugger@mail.com','9999999999','9999999999999','9999999','KY',99999,_binary 'password'),(0000000004,'a','b','a@mail.com','1231231234','123 abc',NULL,NULL,NULL,_binary 'password'),(0000000005,'b','c','b@mail.com','1231231234','123 abc','city',NULL,NULL,_binary 'password'),(0000000006,'mike','mike','mike@mail.com','1231231234','123 place','City','AL',12312,_binary 'password'),(0000000007,'mister','bean','mb@mail.com','1231231234','123 place','city','KY',12312,_binary 'password'),(0000000008,'homie','ggg','homie@mail.com','1010101010','99999999999','9090909 place','TN',9909,_binary 'WùU¸\‚\÷¯Y∫ıö'),(0000000009,'jim','tim','swag@swaggerson.com','1234567891','swagstreet','swagcity','TX',12345,_binary 'ayoayoaoyaoy'),(0000000010,'jim','tim','swag@swaggerson.com','1234567891','swagstreet','swagcity','TX',12345,_binary 'ayoayoaoyaoy');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,4 +123,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-13 15:51:36
+-- Dump completed on 2022-03-13 19:22:37
