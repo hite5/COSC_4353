@@ -14,7 +14,7 @@ views = Blueprint('views', __name__)
 
 host = "localhost"
 user = "root"
-password = ""
+password = "coogshouse"
 database = "group_5_db"
 
 # Home Page | Work on redirecting to different pages
