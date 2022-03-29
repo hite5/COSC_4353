@@ -96,7 +96,7 @@ def EditProfile():
                 database=database
         ) as connection:
             cursor = connection.cursor(buffered=True)
-            query = f"SELECT first_name, last_name, email, phone, user_id FROM users WHERE email = '{current_user.email}'"
+            query = f"SELECT first_name, last_name, email, phone, user_id, address, city, zip, state FROM users WHERE email = '{current_user.email}'"
             cursor.execute(query)
             result = cursor.fetchone()
             if result is None:
@@ -108,6 +108,10 @@ def EditProfile():
                 "email": result[2],
                 "phone": result[3],
                 "id": result[4],
+                "address": result[5],
+                "city": result[6],
+                "zip": result[7],
+                "state": result[8]
             }
 
             if request.method == "POST":
@@ -134,9 +138,11 @@ def EditProfile():
                     flash('Email address belongs to another user. Please enter an email that belongs to you.')
                     return redirect(url_for('views.EditProfile'))
 
-                phone = request.form.get('phoneNum')
+                # phone = request.form.get('phoneNum')
 
-                edit_profile = f"UPDATE users SET first_name = '{firstname}', last_name = '{lastname}', email = '{email}', phone = '{phone}' , address = '{address}', city ='{city}', state = '{state}', zip='{zip}' WHERE user_id = '{data['id']}';"
+                edit_profile = f"UPDATE users SET first_name = '{firstname}', last_name = '{lastname}', email = '{email}', " \
+                               f"phone = '{phone}' , address = '{address}', city ='{city}', state = '{state}', zip='{zip}' " \
+                               f"WHERE user_id = '{data['id']}';"
                 
                 # mysql changes
                 cursor.execute(edit_profile)

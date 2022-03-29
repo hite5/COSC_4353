@@ -193,7 +193,7 @@
                     <h3>Select State</h3>
                                 <div class="State">
                                     <select name="state" required>
-                                        <option value="text">State</option>
+                                        <option value="{{ data.state }}">{{ data.state }}</option>
                                     <option value="AL">AL</option>
                                     <option value="AK">AK</option>
                                     <option value="AZ">AZ</option>
@@ -250,7 +250,7 @@
                                     <option value="WY">WY</option>
                                     </select>
                                 </div>
-                    <input type="text" name="zipcode" placeholder="Zip Code" maxlength="5" value="{{ data.zipcode }}"
+                    <input type="text" name="zipcode" placeholder="Zip Code" maxlength="5" value="{{ data.zip }}"
                            required />
                 </div>
             </div>

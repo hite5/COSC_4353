@@ -34,10 +34,10 @@ class FlaskTest(unittest.TestCase):
 
     def test_index6(self): #new customer submission
         tester = app.test_client(self)
-        response = tester.post('/NewCustomerForm', data=dict(f_name = 'jim',
-                                                             l_name = 'tim',
-                                                             email = 'swag@swaggerson.com',
-                                                             newpasswd = 'ayoayoaoyaoy',
+        response = tester.post('/NewCustomerForm', data=dict(f_name = 'tim',
+                                                             l_name = 'jim',
+                                                             email = 'swag2@swaggerson.com',
+                                                             newpasswd = 'ayoayoaoyaoy2',
                                                              phoneNum = '1234567891',
                                                              Address = 'swagstreet',
                                                              City = 'swagcity',
