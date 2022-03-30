@@ -190,6 +190,7 @@ def SubmitQuoteForm():
     dest = request.form['dest']
     zipcode = request.form['zipcode']
     gallons = request.form['gallons']
+    state = request.form['state']
     try:
         with connect(
                 host=host,
@@ -200,15 +201,61 @@ def SubmitQuoteForm():
             print(connection)
             #doing something
             if zipcode and gallons:
-                #dist = pgeocode.GeoDistance('US')
-                #newdist = dist.query_postal_code("77204", zipcode)
-                cost = 10 * int(gallons)
-                totalcost = int(cost + (float(cost)*0.085))
-                #cost = "$" + str(cost)
-                totalcost = "$" + str(totalcost)
+
 
                 with connection.cursor(buffered=True) as cursor:
-                    trackQ = "INSERT INTO quotes(email, dest, quantity, shipping, tax, total, date, zip) VALUES('" + str(current_user.email) + "', '" + str(dest) + "', '" + str(gallons) + "', '1', '1', '" + str(totalcost) + "', " + "NOW() ,'" + str(zipcode) + "');"
+                    trackQ = "SELECT count(*) FROM quotes WHERE email = '" + str(current_user.email) + "';"
+                    # numOfRow = cursor.execute(trackQ)
+                    cursor.execute(trackQ)
+                    number_of_rows = cursor.fetchone()
+
+                    # numOfRow = cursor.execute(trackQ)
+
+                    # check
+                    currentPrice = 1.5
+
+                    if state == "TX":
+                        locationFactor = 0.02
+                    else:
+                        locationFactor = 0.04
+
+                    if number_of_rows is None:
+                        print("hasnotdonebizzbefore")
+                        rateHistoryFactor = 0.0
+                    else:
+                        print("hasdonebizzbefore")
+                        rateHistoryFactor = 0.01
+
+                    if int(gallons) > 1000:
+                        gallonsReqFactor = 0.02
+                    else:
+                        gallonsReqFactor = 0.03
+
+                    companyProfitFactor = 0.1
+
+                    margin = currentPrice * (locationFactor
+                                             - rateHistoryFactor
+                                             + gallonsReqFactor
+                                             + companyProfitFactor)
+                    suggestedPrice = currentPrice + margin
+                    totalPrice = float(gallons) * suggestedPrice
+
+                    # cost = "$" + str(suggestedPrice)
+                    totalcost = "$" + str(totalPrice)
+
+                    # Margin => (.02 - .01 + .02 + .1) * 1.50 = .195
+                    # Suggested Price/gallon => 1.50 + .195 = $1.695
+                    # Total Amount Due => 1500 * 1.695 = $2542.50
+
+
+
+                    trackQ = "INSERT INTO quotes(email, dest, quantity, shipping, tax, total, date, zip, state) VALUES('" \
+                             + str(current_user.email) + "', '" \
+                             + str(dest) + "', '" \
+                             + str(gallons) + "', '1', '1', '" \
+                             + str(totalcost) + "', " + "NOW() ,'" \
+                             + str(zipcode) + "', '" \
+                             + str(state) + "');"
                     cursor.execute(trackQ)
 
 
@@ -233,20 +280,69 @@ def SubmitQuoteForm():
 def CalcProcess():
     zipcode = request.form['zipcode']
     gallons = request.form['gallons']
-
-    if zipcode and gallons:
-        #dist = pgeocode.GeoDistance('US')
-        #newdist = dist.query_postal_code("77204", zipcode)
-        cost = 10 * int(gallons)
-        #totalcost = int(cost + (newdist * 7))
-        totalcost = int(cost + (float(cost) * 0.085))
-        cost = "$" + str(cost)
-        totalcost = "$" + str(totalcost)
+    state = request.form['state']
 
 
-        return jsonify({"cost": cost, "totalcost": totalcost})
+    try:
+        with connect(
+                host=host,
+                user=user,
+                password=password,
+                database=database
+        ) as connection:
+            print(connection)
+            #query
+            with connection.cursor(buffered=True) as cursor:
+                print(current_user.email)
+                #SELECT count(*) FROM quotes WHERE email = 'homie@mail.com';
+                trackQ = "SELECT count(*) FROM quotes WHERE email = '" + current_user.email + "';"
+                #numOfRow = cursor.execute(trackQ)
+                cursor.execute(trackQ)
+                number_of_rows = cursor.fetchone()
+                print(number_of_rows)
+                #check
+                currentPrice = 1.5
 
-    return jsonify({'error' : 'Missing data!'})
+                if state == "TX":
+                    locationFactor = 0.02
+                else:
+                    locationFactor = 0.04
+
+                if number_of_rows is None:
+                    print("hasnotdonebizzbefore")
+                    rateHistoryFactor = 0.0
+                else:
+                    print("hasdonebizzbefore")
+                    rateHistoryFactor = 0.01
+
+                if int(gallons) > 1000:
+                    gallonsReqFactor = 0.02
+                else:
+                    gallonsReqFactor = 0.03
+
+                companyProfitFactor = 0.1
+
+                margin = currentPrice * (locationFactor
+                                         - rateHistoryFactor
+                                         + gallonsReqFactor
+                                         + companyProfitFactor)
+                suggestedPrice = currentPrice + margin
+                totalPrice = float(gallons) * suggestedPrice
+
+                #Margin => (.02 - .01 + .02 + .1) * 1.50 = .195
+                #Suggested Price/gallon => 1.50 + .195 = $1.695
+                #Total Amount Due => 1500 * 1.695 = $2542.50
+                if zipcode and gallons:
+                    cost = "$" + str(suggestedPrice)
+                    totalcost = "$" + str(totalPrice)
+
+
+                    return jsonify({"cost": cost, "totalcost": totalcost})
+
+            return jsonify({'error' : 'Missing data!'})
+
+    except Error as e:
+        print(e)
 
 
 
