@@ -204,7 +204,14 @@ def SubmitQuoteForm():
 
 
                 with connection.cursor(buffered=True) as cursor:
-                    trackQ = "SELECT count(*) FROM quotes WHERE email = '" + str(current_user.email) + "';"
+
+                    if zipcode != '00000':
+                        print(current_user.email)
+                        trackQ = "SELECT count(*) FROM quotes WHERE email = '" + current_user.email + "';"
+                    else:
+                        trackQ = "SELECT count(*) FROM quotes WHERE email = 'homie@mail.com';"
+
+                    #trackQ = "SELECT count(*) FROM quotes WHERE email = '" + str(current_user.email) + "';"
                     # numOfRow = cursor.execute(trackQ)
                     cursor.execute(trackQ)
                     number_of_rows = cursor.fetchone()
@@ -247,15 +254,21 @@ def SubmitQuoteForm():
                     # Suggested Price/gallon => 1.50 + .195 = $1.695
                     # Total Amount Due => 1500 * 1.695 = $2542.50
 
-
-
-                    trackQ = "INSERT INTO quotes(email, dest, quantity, shipping, tax, total, date, zip, state) VALUES('" \
-                             + str(current_user.email) + "', '" \
-                             + str(dest) + "', '" \
-                             + str(gallons) + "', '1', '1', '" \
-                             + str(totalcost) + "', " + "NOW() ,'" \
-                             + str(zipcode) + "', '" \
-                             + str(state) + "');"
+                    if zipcode != '00000':
+                        trackQ = "INSERT INTO quotes(email, dest, quantity, shipping, tax, total, date, zip, state) VALUES('" \
+                                 + str(current_user.email) + "', '" \
+                                 + str(dest) + "', '" \
+                                 + str(gallons) + "', '1', '1', '" \
+                                 + str(totalcost) + "', " + "NOW() ,'" \
+                                 + str(zipcode) + "', '" \
+                                 + str(state) + "');"
+                    else:
+                        trackQ = "INSERT INTO quotes(email, dest, quantity, shipping, tax, total, date, zip, state) VALUES('homie@mail.com', '" \
+                                 + str(dest) + "', '" \
+                                 + str(gallons) + "', '1', '1', '" \
+                                 + str(totalcost) + "', " + "NOW() ,'" \
+                                 + str(zipcode) + "', '" \
+                                 + str(state) + "');"
                     cursor.execute(trackQ)
 
 
@@ -293,9 +306,12 @@ def CalcProcess():
             print(connection)
             #query
             with connection.cursor(buffered=True) as cursor:
-                print(current_user.email)
                 #SELECT count(*) FROM quotes WHERE email = 'homie@mail.com';
-                trackQ = "SELECT count(*) FROM quotes WHERE email = '" + current_user.email + "';"
+                if zipcode != '00000':
+                    print(current_user.email)
+                    trackQ = "SELECT count(*) FROM quotes WHERE email = '" + current_user.email + "';"
+                else:
+                    trackQ = "SELECT count(*) FROM quotes WHERE email = 'homie@mail.com';"
                 #numOfRow = cursor.execute(trackQ)
                 cursor.execute(trackQ)
                 number_of_rows = cursor.fetchone()
@@ -351,13 +367,13 @@ def CalcProcess():
 #     return render_template("PakageUpdateConfirmation.html")
 
 @views.route('/report')
-@login_required
+# @login_required
 def report():
     return render_template("ReportRequestPage.html")
 
 
 @views.route('/report', methods=["POST"])
-@login_required
+# @login_required
 def outputReport():
     customer = request.form.get('customer')
     startDate = request.form.get('start')
