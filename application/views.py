@@ -14,7 +14,7 @@ views = Blueprint('views', __name__)
 
 host = "localhost"
 user = "root"
-password = "C0ug@rs!" # TODO change this before pushing
+password = "coogshouse"
 database = "group_5_db"
 
 # Home Page | Work on redirecting to different pages
@@ -377,7 +377,6 @@ def report():
 @views.route('/report', methods=["POST"])
 # @login_required
 def outputReport():
-    customer = request.form.get('customer')
     startDate = request.form.get('start')
     endDate = request.form.get('end')
     startDate = startDate + " 00:00:00"
@@ -420,29 +419,10 @@ def outputReport():
 
         print(netRevenue)
         netRevenue = format(netRevenue, '.2f')
-        return render_template("ReportOutput.html", report=f"{customer} Report", heading=headers, data=data,
+        return render_template("ReportOutput.html", heading=headers, data=data,
                                date_start=startDate,
                                date_end=endDate, search_type="Customer ID", revenue=netRevenue,
                                num_items=len(result))
-
-
-
-    # with open("application/static/clients.json") as clientFile:
-    #     clients = json.loads(clientFile.read())
-    #     i = 0
-    #     for client in clients:
-    #         if client['client'] == customer and startDate < client['date'] < endDate:
-    #             clientCriteria.append(client)
-    #             netRevenue += client['total']
-    #         i += 1
-    #
-    # netRevenue = float("%.2f" % netRevenue)
-    # if len(clientCriteria) > 0:
-    #     return render_template("ReportOutput.html", report=f"{customer} Report", heading=headers, data=clientCriteria, date_start=startDate,
-    #                         date_end=endDate, search_type="Customer ID", revenue=netRevenue, num_items=len(clientCriteria))
-    # else:
-    #     return render_template("ReportOutput.html")
-
 
 
 
