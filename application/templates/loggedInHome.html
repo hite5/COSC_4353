@@ -30,24 +30,29 @@
 <body class="w3-content" style="max-width:1200px">
 
   <!-- Sidebar/menu -->
-  <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
+    <nav class="w3-sidebar w3-bar-block w3-black w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
     <div class="w3-container w3-display-container w3-padding-16">
       <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
-      <h3 class="w3-wide"><b>UH Post Office</b></h3>
+      <h3 class="w3-wide"><b>UH Fuel Depot</b></h3>
     </div>
     <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
-      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-white w3-left-align" id="myBtn">
-        Packages <i class="fa fa-caret-down"></i>
+      <a href="{{ url_for('views.index') }}" class="w3-bar-item w3-button">Home</a>
+      {% if current_user.is_authenticated %} <!-- Employees and Supervisors -->
+      <a href="{{ url_for('auth.logout') }}" class="w3-bar-item w3-button">Logout</a>
+      <a href="/NewOrder" class="w3-bar-item w3-button">New Order</a>
+      <a href="/report" class="w3-bar-item w3-button">Order Reports</a>
+      <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-bar-item w3-button">
+        Account Settings <i class="fa fa-caret-down"></i>
       </a>
       <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
-        <a href="{{ url_for('views.index') }}" class="w3-bar-item w3-button">Home</a>
-        <a href="{{ url_for('views.profile') }}" class="w3-bar-item w3-button">Account</a>
-        <a href="{{ url_for('auth.logout') }}" class="w3-bar-item w3-button">Logout</a>
-        <a href="/NewOrder" class="w3-bar-item w3-button">New Package</a>
-
+        <a href="/EditProfile" class="w3-bar-item w3-button">Edit Account</a>
+        <a href="/changePassword" class="w3-bar-item w3-button">Change Password</a>
       </div>
+      {% endif %}
+      {% if not current_user.is_authenticated %} <!-- Not Logged In -->
+      <a href="/emp_login" class="w3-bar-item w3-button">Customer Login</a>
+      {% endif %}
     </div>
-
   </nav>
 
   <!-- Top menu on small screens -->

@@ -14,7 +14,7 @@ views = Blueprint('views', __name__)
 
 host = "localhost"
 user = "root"
-password = "coogshouse"
+password = "C0ug@rs!" # TODO change this before pushing
 database = "group_5_db"
 
 # Home Page | Work on redirecting to different pages
@@ -246,26 +246,27 @@ def SubmitQuoteForm():
                                              + companyProfitFactor)
                     suggestedPrice = currentPrice + margin
                     totalPrice = float(gallons) * suggestedPrice
+                    totalPrice = float("%.2f" % totalPrice)
 
                     # cost = "$" + str(suggestedPrice)
-                    totalcost = "$" + str(totalPrice)
+                    totalcost = str(totalPrice)
 
                     # Margin => (.02 - .01 + .02 + .1) * 1.50 = .195
                     # Suggested Price/gallon => 1.50 + .195 = $1.695
                     # Total Amount Due => 1500 * 1.695 = $2542.50
 
                     if zipcode != '00000':
-                        trackQ = "INSERT INTO quotes(email, dest, quantity, shipping, tax, total, date, zip, state) VALUES('" \
+                        trackQ = "INSERT INTO quotes(email, dest, quantity, total, date, zip, state) VALUES('" \
                                  + str(current_user.email) + "', '" \
                                  + str(dest) + "', '" \
-                                 + str(gallons) + "', '1', '1', '" \
+                                 + str(gallons) + "','" \
                                  + str(totalcost) + "', " + "NOW() ,'" \
                                  + str(zipcode) + "', '" \
                                  + str(state) + "');"
                     else:
-                        trackQ = "INSERT INTO quotes(email, dest, quantity, shipping, tax, total, date, zip, state) VALUES('homie@mail.com', '" \
+                        trackQ = "INSERT INTO quotes(email, dest, quantity, total, date, zip, state) VALUES('homie@mail.com', '" \
                                  + str(dest) + "', '" \
-                                 + str(gallons) + "', '1', '1', '" \
+                                 + str(gallons) + "','" \
                                  + str(totalcost) + "', " + "NOW() ,'" \
                                  + str(zipcode) + "', '" \
                                  + str(state) + "');"
@@ -344,6 +345,7 @@ def CalcProcess():
                                          + companyProfitFactor)
                 suggestedPrice = currentPrice + margin
                 totalPrice = float(gallons) * suggestedPrice
+                totalPrice = format(totalPrice, '.2f')
 
                 #Margin => (.02 - .01 + .02 + .1) * 1.50 = .195
                 #Suggested Price/gallon => 1.50 + .195 = $1.695
@@ -378,41 +380,71 @@ def outputReport():
     customer = request.form.get('customer')
     startDate = request.form.get('start')
     endDate = request.form.get('end')
-    print(customer)
-    print(startDate)
-    print(endDate)
+    startDate = startDate + " 00:00:00"
+    endDate = endDate + " 23:59:59"
     netRevenue = 0
-    clientCriteria = []
-    headers = ['Quote ID', 'Client', 'Quantity', 'Shipping Price', 'Tax Price', 'Total Price', 'Date']
+    print(f"startDate = {startDate}, endDate = {endDate}")
+    headers = ['Quote ID', 'Client', 'Address', 'Quantity', 'Total Price', 'Date']
+    sqlQuery = f"SELECT * FROM group_5_db.quotes WHERE (date BETWEEN '{startDate}' AND '{endDate}')"
+    print(sqlQuery)
+
+
     if startDate > endDate:
         flash("Start date cannot be greater than End date.")
         return redirect(url_for('views.outputReport'))
 
-    with open("application/static/clients.json") as clientFile:
-        clients = json.loads(clientFile.read())
-        i = 0
-        for client in clients:
-            if client['client'] == customer and startDate < client['date'] < endDate:
-                clientCriteria.append(client)
-                netRevenue += client['total']
-            i += 1
+    with connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database
+    ) as connection:
+        print(connection)
+        cursor = connection.cursor(buffered=True)
+        cursor.execute(sqlQuery)
+        result = cursor.fetchall()
+        if len(result) == 0:
+            flash("No items in the database")
+            return redirect(url_for('views.outputReport'))
+        data = []
+        for row in result:
+            data_row = list(row)
+            date = row[2] + ", " + row[7] + ", " + str(row[6])
+            data_row[4] = "$" + data_row[4]
+            del(data_row[7])
+            del(data_row[6])
+            del (data_row[2])
+            data_row.insert(2, date)
+            data.append(data_row)
+            netRevenue += float(row[4])
 
-    netRevenue = float("%.2f" % netRevenue)
-    if len(clientCriteria) > 0:
-        return render_template("ReportOutput.html", report=f"{customer} Report", heading=headers, data=clientCriteria, date_start=startDate,
-                            date_end=endDate, search_type="Customer ID", revenue=netRevenue, num_items=len(clientCriteria))
-    else:
-        return render_template("ReportOutput.html")
+        print(netRevenue)
+        netRevenue = format(netRevenue, '.2f')
+        return render_template("ReportOutput.html", report=f"{customer} Report", heading=headers, data=data,
+                               date_start=startDate,
+                               date_end=endDate, search_type="Customer ID", revenue=netRevenue,
+                               num_items=len(result))
 
 
-    # with connect(
-    #         host=host,
-    #         user=user,
-    #         password=password,
-    #         database=database
-    # ) as connection:
-    #     print(connection)
-    #     cursor = connection.cursor(buffered=True)
+
+    # with open("application/static/clients.json") as clientFile:
+    #     clients = json.loads(clientFile.read())
+    #     i = 0
+    #     for client in clients:
+    #         if client['client'] == customer and startDate < client['date'] < endDate:
+    #             clientCriteria.append(client)
+    #             netRevenue += client['total']
+    #         i += 1
+    #
+    # netRevenue = float("%.2f" % netRevenue)
+    # if len(clientCriteria) > 0:
+    #     return render_template("ReportOutput.html", report=f"{customer} Report", heading=headers, data=clientCriteria, date_start=startDate,
+    #                         date_end=endDate, search_type="Customer ID", revenue=netRevenue, num_items=len(clientCriteria))
+    # else:
+    #     return render_template("ReportOutput.html")
+
+
+
 
 @views.route('/')
 def index():
