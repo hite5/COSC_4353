@@ -217,7 +217,7 @@
     </div>
     <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
       <a href="{{ url_for('views.index') }}" class="w3-bar-item w3-button">Home</a>
-      {% if current_user.is_authenticated %} <!-- Employees and Supervisors -->
+      {% if session['loggedin'] %} <!-- Employees and Supervisors -->
       <a href="{{ url_for('auth.logout') }}" class="w3-bar-item w3-button">Logout</a>
       <a href="/NewOrder" class="w3-bar-item w3-button">New Order</a>
       <a href="/report" class="w3-bar-item w3-button">Order Reports</a>
@@ -229,8 +229,8 @@
         <a href="/changePassword" class="w3-bar-item w3-button">Change Password</a>
       </div>
       {% endif %}
-      {% if not current_user.is_authenticated %} <!-- Not Logged In -->
-      <a href="/emp_login" class="w3-bar-item w3-button">Customer Login</a>
+      {% if not session['loggedin'] %} <!-- Not Logged In -->
+      <a href="/login" class="w3-bar-item w3-button">Customer Login</a>
       {% endif %}
     </div>
   </nav>

@@ -1,67 +1,56 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, logout_user, login_required
-from .models import User
-from . import db
+from mysql.connector import connect, Error
+import re
 
 auth = Blueprint('auth', __name__)
 
+host = "localhost"
+user = "root"
+password = "C0ug@rs!"
+database = "group_5_db"
 
-@auth.route('/emp_login')
-def emp_login():
-    return render_template("KEEPLogin.html")
 
-
-@auth.route('/signup')
-def signup():
-    return render_template('signup.html')
+@auth.route('/login')
+def login():
+    return render_template("Login.html")
 
 
 @auth.route('/logout')
-@login_required
 def logout():
-    logout_user()
-    return render_template("KEEPhomePage.html")
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    session.pop('name', None)
+    return render_template("HomePage.html")
 
 
-@auth.route('/signup', methods=['POST'])
-def signup_post():
-    email = request.form.get('email')
-    name = request.form.get('name')
-    password = request.form.get('password')
-
-    user = User.query.filter_by(email=email).first()  # if this returns a user, then the email already exists in database
-
-    if user:  # if a user is found, we want to redirect back to signup page so user can try again
-        flash('Email address already exists')
-        return redirect(url_for('auth.signup'))
-
-    # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
-
-    # add the new user to the database
-    db.session.add(new_user)
-    db.session.commit()
-
-    return redirect(url_for('auth.emp_login'))
-
-
-@auth.route('/emp_login', methods=['POST'])
+@auth.route('/login', methods=['POST'])
 def login_post():
-    email = request.form.get('username')
-    password = request.form.get('password')
-    remember = True if request.form.get('remember') else False
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        username = request.form.get('username')
+        userpass = request.form.get('password')
+        try:
+            with connect(
+                    host=host,
+                    user=user,
+                    password=password,
+                    database=database
+            ) as connection:
+                cursor = connection.cursor(buffered=True)
+                query = f"SELECT * FROM users WHERE email = '{username}'"
+                cursor.execute(query)
+                account = cursor.fetchone()
+                if account:
+                    authenticate = check_password_hash(account[9], userpass)
+                    if authenticate:
+                        session['loggedin'] = True
+                        session['id'] = account[0]
+                        session['username'] = account[3]
+                        session['name'] = account[1] + " " + account[2]
+                        return redirect(url_for('views.home'))
+                flash('Incorrect username or password !')
+                return render_template('Login.html')
 
-    user = User.query.filter_by(email=email).first()
-
-    # check if the user actually exists
-    # take the user-supplied password, hash it, and compare it to the hashed password in the database
-    if not user or not check_password_hash(user.password, password):
-        flash('Please check your login details and try again.')
-        return redirect(url_for('auth.emp_login')) # if the user doesn't exist or password is wrong, reload the page
-
-        # if the above check passes, then we know the user has the right credentials
-       # login_user(user, remember=remember)
-    else:
-        login_user(user, remember=remember)
-        return redirect(url_for('views.home'))
+        except Error as e:
+            print(e)
