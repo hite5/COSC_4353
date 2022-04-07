@@ -1,14 +1,15 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from mysql.connector import connect, Error
-import re
+
+from application import db_info
 
 auth = Blueprint('auth', __name__)
 
-host = "localhost"
-user = "root"
-password = "C0ug@rs!"
-database = "group_5_db"
+host = db_info.host
+user = db_info.user
+password = db_info.password
+database = db_info.database
 
 
 @auth.route('/login')

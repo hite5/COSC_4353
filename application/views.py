@@ -4,15 +4,16 @@ from mysql.connector import connect, Error
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
 import re
+from application import db_info
 import datetime
 import pgeocode
 
 views = Blueprint('views', __name__)
 
-host = "localhost"
-user = "root"
-password = "C0ug@rs!"
-database = "group_5_db"
+host = db_info.host
+user = db_info.user
+password = db_info.password
+database = db_info.database
 
 
 # Home Page | Work on redirecting to different pages
