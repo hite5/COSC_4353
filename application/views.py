@@ -189,6 +189,9 @@ def SubmitQuoteForm():
                     # numOfRow = cursor.execute(trackQ)
                     cursor.execute(trackQ)
                     number_of_rows = cursor.fetchone()
+                    number_of_rows = number_of_rows[0]
+
+                    print(f"Submit number_of_rows  = {number_of_rows}")
 
                     # numOfRow = cursor.execute(trackQ)
 
@@ -200,7 +203,7 @@ def SubmitQuoteForm():
                     else:
                         locationFactor = 0.04
 
-                    if number_of_rows is None:
+                    if number_of_rows is None or number_of_rows == 0:
                         print("hasnotdonebizzbefore")
                         rateHistoryFactor = 0.0
                     else:
@@ -279,7 +282,8 @@ def CalcProcess():
                 # numOfRow = cursor.execute(trackQ)
                 cursor.execute(trackQ)
                 number_of_rows = cursor.fetchone()
-                print(number_of_rows)
+
+                number_of_rows = number_of_rows[0]
                 # check
                 currentPrice = 1.5
 
@@ -288,7 +292,7 @@ def CalcProcess():
                 else:
                     locationFactor = 0.04
 
-                if number_of_rows is None:
+                if number_of_rows is None or number_of_rows == 0:
                     print("hasnotdonebizzbefore")
                     rateHistoryFactor = 0.0
                 else:
