@@ -39,7 +39,7 @@ def login_post():
                     database=database
             ) as connection:
                 cursor = connection.cursor(buffered=True)
-                query = f"SELECT * FROM users WHERE email = '{username}'"
+                query = f"SELECT * FROM users WHERE email = '{username}';"
                 cursor.execute(query)
                 account = cursor.fetchone()
                 if account:
