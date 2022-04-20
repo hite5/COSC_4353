@@ -100,8 +100,14 @@ class FlaskTest(unittest.TestCase):
             statuscode = response.status_code
             self.assertEqual(statuscode, 302)
 
-    def test_index11(self): #load login page
+    def test_index11(self): #load report page
         tester = app.test_client(self)
         response = tester.get("/report")
+        statuscode = response.status_code
+        self.assertEqual(statuscode, 200)
+
+    def test_index12(self): #load new order
+        tester = app.test_client(self)
+        response = tester.get("/NewOrder")
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)

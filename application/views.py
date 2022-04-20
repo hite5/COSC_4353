@@ -152,7 +152,7 @@ def EditProfile():
         return render_template("HomePage.html")
 
 
-@views.route('/NewOrder', methods=["GET", "POST"])  # pragma: no cover
+@views.route('/NewOrder', methods=["GET", "POST"])
 def packDelivery():
     try:
         if session['loggedin']:
