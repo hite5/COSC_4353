@@ -81,7 +81,7 @@ def NewCustomerForm():
     return render_template("NewCustomerForm.html")
 
 
-@views.route('/EditProfile', methods=["GET", "POST"])  # pragma: no cover
+@views.route('/EditProfile', methods=["GET", "POST"])
 def EditProfile():
     try:
         if session['loggedin']:
@@ -393,7 +393,7 @@ def index():
 
 
 # Change Password
-@views.route('/changePassword', methods=['GET', 'POST'])  # pragma: no cover
+@views.route('/changePassword', methods=['GET', 'POST'])
 def changePassword():
     if request.method == 'POST':
         try:

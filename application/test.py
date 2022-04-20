@@ -10,15 +10,15 @@ class FlaskTest(unittest.TestCase):
 
     def test_index2(self): #load login page
         tester = app.test_client(self)
-        response = tester.get("/emp_login")
+        response = tester.get("/login")
         statuscode = response.status_code
         self.assertEqual(statuscode, 200)
 
-    def test_index3(self): #signup page
-        tester = app.test_client(self)
-        response = tester.post('/signup', data=dict(email='data1', name='data2name', password='data2pass'))
-        statuscode = response.status_code
-        self.assertEqual(statuscode, 302) #redirect
+    # def test_index3(self): #signup page
+    #     tester = app.test_client(self)
+    #     response = tester.post('/signup', data=dict(email='data1', name='data2name', password='data2pass'))
+    #     statuscode = response.status_code
+    #     self.assertEqual(statuscode, 302) #redirect
 
     def test_index4(self): #calculator page
         tester = app.test_client(self)
@@ -38,31 +38,70 @@ class FlaskTest(unittest.TestCase):
         response = tester.post('/NewCustomerForm', data=dict(f_name = 'tim',
                                                              l_name = 'jim',
                                                              email = 'swag3@swaggerson.com',
-                                                             newpasswd = 'ayoayoaoyaoy2',
+                                                             newpasswd = 'password',
                                                              phoneNum = '1234567891',
                                                              Address = 'swagstreet',
                                                              City = 'swagcity',
                                                              state = 'TX',
                                                              zipcode = '12345'))
         statuscode = response.status_code
-        self.assertEqual(statuscode, 200)
+        self.assertEqual(statuscode, 302)
 
     def test_index7(self): #test login
         tester = app.test_client(self)
-        response = tester.post('/emp_login', data=dict(email='swag3@swaggerson.com', password='ayoayoaoyaoy', remember='True'))
+        response = tester.post('/login', data=dict(username='mj@mail.com', password='password'))
         statuscode = response.status_code
+        tester.get('/logout')
         self.assertEqual(statuscode, 302)
 
     def test_index8(self):  # test report
+        with app.test_client(self) as tester:
+            tester.get('/auto_login')
+            response = tester.post('/report', data=dict(start='2021-01-01', end='2022-03-31'))
+            statuscode = response.status_code
+            self.assertEqual(statuscode, 200)
+
+    def test_index9(self):  # test editprofile
+        with app.test_client(self) as tester:
+            # tester = app.test_client(self)
+            tester.get('/auto_login')
+            response = tester.post('/EditProfile', data=dict(
+                fname='mike',
+                lname='jones',
+                phoneNum='7879247896',
+                Address='101 Main St',
+                City='Houston',
+                state='TX',
+                zipcode='77009',
+                email='mj@mail.com'))
+
+            statuscode = response.status_code
+            self.assertEqual(statuscode, 302)
+
+    def test_index10(self):  # test change password
+        with app.test_client(self) as tester:
+            # tester = app.test_client(self)
+            tester.get('/auto_login')
+            response = tester.post('/changePassword', data=dict(
+                oldpasswd='password',
+                newpasswd='password1',
+                confirmpasswd='password1'))
+            statuscode = response.status_code
+            self.assertEqual(statuscode, 302)
+
+    def test_index101(self):  # test change password
+        with app.test_client(self) as tester:
+            # tester = app.test_client(self)
+            tester.get('/auto_login')
+            response = tester.post('/changePassword', data=dict(
+                oldpasswd='password1',
+                newpasswd='password',
+                confirmpasswd='password'))
+            statuscode = response.status_code
+            self.assertEqual(statuscode, 302)
+
+    def test_index11(self): #load login page
         tester = app.test_client(self)
-        response = tester.post('/report', data=dict(customer='Chevron', start='2021-01-01', end='2022-03-31'))
+        response = tester.get("/report")
         statuscode = response.status_code
-        self.assertEqual(statuscode, 302)
-
-
-    # #FAILED DUE TO OVERLOADING ROUTES (ONE HAS POST)
-    # def test_index3(self):  # load signup page
-    #     tester = app.test_client(self)
-    #     response = tester.get("/signup")
-    #     statuscode = response.status_code
-    #     self.assertEqual(statuscode, 200)
+        self.assertEqual(statuscode, 200)

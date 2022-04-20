@@ -55,3 +55,11 @@ def login_post():
 
         except Error as e:
             print(e)
+
+@auth.route('/auto_login')
+def auto_login():
+    session['loggedin'] = True
+    session['id'] = 1
+    session['username'] = 'mj@mail.com'
+    session['name'] = "mike jones"
+    return "ok"
