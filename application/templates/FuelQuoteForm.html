@@ -197,7 +197,7 @@
         {
           console.log("getting somewhere")
             if (data.error) {
-                $('#cost').text("$0 ERROR");
+                $('#cost').text("$0");
                 $('#totalcost').text("$0");
 
             }
@@ -230,15 +230,11 @@
           console.log("getting somewhere 2")
             if (data.success) {
 
-               $('#calculator').hide();
+
+                $('#calculator').hide();
                 $('#success').show();
                 $('#quoteID').text(data.quoteID);
 
-
-            }
-            else {
-                $('#cost').text("$0 ERROR");
-                $('#totalcost').text("$0");
 
             }
         }
@@ -360,15 +356,15 @@
                 </select>
             </div>
 
-            <H3><br>Suggested Price (Without shipping costs)<br></H3>
+            <H3><br>Suggested Price<br></H3>
             <H2 id = cost>$0</H2>
             <H3>Total Cost<br></H3>
             <H2 id = totalcost>$0</H2>
             <div>
-                <button type="submit" class="button">Calculate Costs</button>
+                <button type="submit" class="button">Get Quote</button>
             </div>
             <div>
-                <button type="reset" class="button">Continue</button>
+                <button type="reset" class="button">Submit Quote</button>
             </div>
 
 

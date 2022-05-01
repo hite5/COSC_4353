@@ -175,8 +175,10 @@ def SubmitQuoteForm():
                 database=database
         ) as connection:
             print(connection)
+            if dest is None:
+                print("is none")
             # doing something
-            if zipcode and gallons:
+            if zipcode and gallons and state != "text" and dest:
 
                 with connection.cursor(buffered=True) as cursor:
 
@@ -262,6 +264,9 @@ def CalcProcess():
     zipcode = request.form['zipcode']
     gallons = request.form['gallons']
     state = request.form['state']
+
+    if state == "text":
+        return jsonify({'error': 'Missing data!'})
 
     try:
         with connect(
