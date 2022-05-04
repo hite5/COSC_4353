@@ -199,11 +199,13 @@
             if (data.error) {
                 $('#cost').text("$0");
                 $('#totalcost').text("$0");
+                $('#fail').hide();
 
             }
             else {
                 $('#cost').text(data.cost);
                 $('#totalcost').text(data.totalcost);
+                $('#fail').hide();
 
             }
         }
@@ -232,10 +234,14 @@
 
 
                 $('#calculator').hide();
+                $('#fail').hide();
                 $('#success').show();
                 $('#quoteID').text(data.quoteID);
 
 
+            }
+            else{
+                $('#fail').show();
             }
         }
       })
@@ -372,6 +378,9 @@
         <div id = success style="display:none;">
             <H3>FORM SUBMITTED<br></H3>
             <H3 id = quoteID></H3>
+        </div>
+        <div id = fail style="display:none;">
+            <H3>Please fill out the form before submitting<br></H3>
         </div>
 
     </div>
