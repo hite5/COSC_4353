@@ -178,7 +178,7 @@ def SubmitQuoteForm():
             if dest is None:
                 print("is none")
             # doing something
-            if zipcode and gallons and state != "text" and dest:
+            if zipcode and int(gallons) > 0 and state != "text" and dest:
 
                 with connection.cursor(buffered=True) as cursor:
 
