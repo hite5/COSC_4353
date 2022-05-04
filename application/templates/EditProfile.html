@@ -244,8 +244,7 @@
                                     <option value="WY">WY</option>
                                     </select>
                                 </div>
-                    <input type="text" name="zipcode" placeholder="Zip Code" maxlength="5" value="{{ data.zip }}"
-                           required />
+                    <input type="text" name="zipcode" placeholder="Zip Code" minlength="5"  maxlength="5" value="{{ data.zip }}" required />
                 </div>
             </div>
             <button href="/" class="button">Submit</button>

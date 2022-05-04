@@ -298,7 +298,7 @@
             {% endwith %}
         <form method = "post" id = "calculator">
             <input class="fname" type="text" id="dest" name="dest" placeholder="Address" maxlength = "50" required/>
-            <input type="text" pattern="\d*" id="zipcode" name="zip" placeholder="ZIP CODE" maxlength = "5" minlength = "5" required/>
+            <input type="text" pattern="\d*" id="zipcode" name="zip" placeholder="ZIP CODE" minlength="5" maxlength = "5" minlength = "5" required/>
             <input type="text" pattern="\d*" id="gallons" name="gallons" placeholder="Gallons Requested" maxlength = "10" minlength = "1" required/>
 
             <h3>Select State</h3>
