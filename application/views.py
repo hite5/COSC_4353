@@ -139,8 +139,8 @@ def EditProfile():
                     cursor.execute(edit_profile)
                     connection.commit()
 
-                    flash('Profile successfully updated.')
-                    return redirect(url_for('views.home'))
+                    flash('Profile successfully updated. PLEASE LOG BACK IN')
+                    return redirect(url_for('auth.logout'))
 
                 else:  # method = GET
                     return render_template("EditProfile.html", data=data)
